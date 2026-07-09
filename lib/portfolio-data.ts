@@ -256,7 +256,7 @@ export const currentlyBuilding = [
 
 export const contactLinks = {
   github: 'https://github.com/Rohan-Jose-08',
-  linkedin: 'https://www.linkedin.com/',
-  email: 'mailto:hello@rohanjose.dev',
+  linkedin: 'www.linkedin.com/in/rohan-jose-8a85b331a',
+  email: 'mailto:rohanjose08@gmail.com',
   resume: '/resume.pdf',
 }
