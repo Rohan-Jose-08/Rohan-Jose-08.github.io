@@ -1,4 +1,3 @@
-import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Inter, Geist_Mono } from 'next/font/google'
 import './globals.css'
@@ -6,7 +5,7 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' })
 
-const siteUrl = 'https://rohan-jose.vercel.app'
+const siteUrl = 'https://rohan-jose-08.github.io'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -67,7 +66,6 @@ export default function RootLayout({
     <html lang="en" className={`bg-background dark ${inter.variable} ${geistMono.variable}`}>
       <body className="font-sans antialiased">
         {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
   )
