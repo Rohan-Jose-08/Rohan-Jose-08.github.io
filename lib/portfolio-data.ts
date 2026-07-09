@@ -171,7 +171,7 @@ export const experience: ExperienceItem[] = [
   {
     role: 'Hardware Repair & Refurbishment',
     org: 'Independent',
-    period: 'Ongoing',
+    period: 'Erasmus+ placement',
     summary:
       'Diagnosed, repaired, and refurbished computer hardware — building the low-level hardware intuition that informs systems software work.',
     highlights: [
