@@ -1,4 +1,0 @@
-User-Agent: *
-Allow: /
-
-Sitemap: https://rohan-jose-08.github.io/sitemap.xml
