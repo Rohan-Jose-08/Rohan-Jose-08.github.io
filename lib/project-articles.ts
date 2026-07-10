@@ -3,6 +3,9 @@ export interface ArticleSection {
   paragraphs: string[]
   code?: { language: string; label: string; snippet: string }
   bullets?: string[]
+}
+
+const supplementalProjectArticles = {
   'hospital-management-platform': {
     slug: 'hospital-management-platform', readingTime: '7 min read',
     intro: 'Hospital Management Platform is a full-stack healthcare workflow project: patients book and manage appointments, doctors work from dedicated views, and administrators oversee the system. The interesting part is the boundary between a pleasant web interface and the disciplined data, access, and notification flows that a healthcare-shaped product demands.',
@@ -69,7 +72,7 @@ export interface ProjectArticle {
   future: string[]
 }
 
-export const projectArticles: Record<string, ProjectArticle> = {
+const existingProjectArticles: Record<string, ProjectArticle> = {
   'os-kernel': {
     slug: 'os-kernel',
     readingTime: '9 min read',
@@ -525,4 +528,9 @@ int line_height = (int)(SCREEN_H / perp_dist);`,
       'no_std experiments targeting bare-metal embedded boards',
     ],
   },
+}
+
+export const projectArticles: Record<string, ProjectArticle> = {
+  ...existingProjectArticles,
+  ...supplementalProjectArticles,
 }
