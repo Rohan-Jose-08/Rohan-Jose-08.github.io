@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { Command } from 'lucide-react'
+import Magnet from '@/components/Magnet'
 
 const links = [
   { href: '#projects', label: 'Projects' },
@@ -39,13 +40,14 @@ export function SiteNav({ onOpenPalette }: { onOpenPalette: () => void }) {
         </a>
         <div className="hidden items-center gap-8 md:flex">
           {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
-            >
-              {l.label}
-            </a>
+            <Magnet key={l.href} magnetStrength={0.6} padding={20} activeTransition="transform 0.2s ease-out" inactiveTransition="transform 0.4s ease-in-out">
+              <a
+                href={l.href}
+                className="text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
+              >
+                {l.label}
+              </a>
+            </Magnet>
           ))}
         </div>
         <button

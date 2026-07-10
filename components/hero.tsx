@@ -4,6 +4,8 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowDown, MapPin } from 'lucide-react'
 import { Github } from '@/components/brand-icons'
 import { NeuralCanvas } from '@/components/neural-canvas'
+import BlurText from '@/components/BlurText'
+import Magnet from '@/components/Magnet'
 import type { GitHubData } from '@/lib/github'
 
 const easeOut = [0.16, 1, 0.3, 1] as const
@@ -39,7 +41,6 @@ export function Hero({ data }: { data: GitHubData }) {
   return (
     <section id="top" className="relative flex min-h-dvh flex-col justify-center overflow-hidden">
       <NeuralCanvas />
-      {/* Ambient glow */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -top-40 left-1/2 h-[500px] w-[800px] -translate-x-1/2 rounded-full bg-primary/10 blur-[140px]"
@@ -51,15 +52,37 @@ export function Hero({ data }: { data: GitHubData }) {
         </motion.div>
 
         <div className="flex flex-col gap-6">
-          <motion.h1
-            {...fade(0.1)}
+          <BlurText
+            text={`${data.profile.name}.`}
+            animateBy="words"
+            direction="top"
+            delay={120}
+            stepDuration={0.3}
             className="text-balance text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl"
-          >
-            {data.profile.name}
-            <span className="text-primary">.</span>
-            <br />
-            <span className="text-gradient">Engineering from bare metal to AI.</span>
-          </motion.h1>
+            animationFrom={{ filter: 'blur(10px)', opacity: 0, y: -30 }}
+            animationTo={[
+              { filter: 'blur(4px)', opacity: 0.6, y: -5 },
+              { filter: 'blur(0px)', opacity: 1, y: 0 },
+            ]}
+            easing="easeOut"
+            threshold={0.4}
+          />
+
+          <BlurText
+            text="Engineering from bare metal to AI."
+            animateBy="words"
+            direction="top"
+            delay={150}
+            stepDuration={0.25}
+            className="text-gradient text-balance text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl"
+            animationFrom={{ filter: 'blur(10px)', opacity: 0, y: -20 }}
+            animationTo={[
+              { filter: 'blur(3px)', opacity: 0.5, y: -3 },
+              { filter: 'blur(0px)', opacity: 1, y: 0 },
+            ]}
+            easing="easeOut"
+            threshold={0.4}
+          />
 
           <motion.p {...fade(0.2)} className="max-w-2xl text-pretty text-lg leading-relaxed text-muted-foreground">
             Software Engineer <span className="text-foreground">|</span> Systems Programmer{' '}
@@ -75,22 +98,26 @@ export function Hero({ data }: { data: GitHubData }) {
           </motion.div>
 
           <motion.div {...fade(0.3)} className="flex flex-wrap items-center gap-4">
-            <a
-              href="#projects"
-              className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
-            >
-              View projects
-              <ArrowDown className="h-4 w-4" aria-hidden="true" />
-            </a>
-            <a
-              href={data.profile.htmlUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="glass inline-flex cursor-pointer items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-colors duration-200 hover:bg-secondary"
-            >
-              <Github className="h-4 w-4" aria-hidden="true" />
-              GitHub
-            </a>
+            <Magnet magnetStrength={1.5} padding={40} activeTransition="transform 0.2s ease-out" inactiveTransition="transform 0.4s ease-in-out">
+              <a
+                href="#projects"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
+              >
+                View projects
+                <ArrowDown className="h-4 w-4" aria-hidden="true" />
+              </a>
+            </Magnet>
+            <Magnet magnetStrength={1.5} padding={40} activeTransition="transform 0.2s ease-out" inactiveTransition="transform 0.4s ease-in-out">
+              <a
+                href={data.profile.htmlUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass inline-flex cursor-pointer items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-colors duration-200 hover:bg-secondary"
+              >
+                <Github className="h-4 w-4" aria-hidden="true" />
+                GitHub
+              </a>
+            </Magnet>
           </motion.div>
         </div>
 

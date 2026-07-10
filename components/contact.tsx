@@ -3,6 +3,7 @@
 import { FileDown, Mail } from 'lucide-react'
 import { Github, Linkedin } from '@/components/brand-icons'
 import { Reveal, SectionHeading } from '@/components/motion-primitives'
+import Magnet from '@/components/Magnet'
 import { contactLinks, currentlyBuilding } from '@/lib/portfolio-data'
 
 const links = [
@@ -31,15 +32,16 @@ export function Contact() {
               {links.map((l) => {
                 const Icon = l.icon
                 return (
-                  <a
-                    key={l.label}
-                    href={l.href}
-                    {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    className="glass inline-flex cursor-pointer items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-200 hover:scale-[1.03] hover:bg-secondary active:scale-[0.98]"
-                  >
-                    <Icon className="h-4 w-4 text-primary" aria-hidden="true" />
-                    {l.label}
-                  </a>
+                  <Magnet key={l.label} magnetStrength={1.2} padding={30} activeTransition="transform 0.2s ease-out" inactiveTransition="transform 0.4s ease-in-out">
+                    <a
+                      href={l.href}
+                      {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      className="glass inline-flex cursor-pointer items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-200 hover:scale-[1.03] hover:bg-secondary active:scale-[0.98]"
+                    >
+                      <Icon className="h-4 w-4 text-primary" aria-hidden="true" />
+                      {l.label}
+                    </a>
+                  </Magnet>
                 )
               })}
             </div>

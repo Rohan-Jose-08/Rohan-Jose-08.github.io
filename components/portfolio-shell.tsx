@@ -11,6 +11,8 @@ import { Skills } from '@/components/skills'
 import { Philosophy } from '@/components/philosophy'
 import { Contact } from '@/components/contact'
 import { CommandPalette } from '@/components/command-palette'
+import Noise from '@/components/Noise'
+import ClickSpark from '@/components/ClickSpark'
 import type { GitHubData } from '@/lib/github'
 
 export function PortfolioShell({ data }: { data: GitHubData }) {
@@ -25,16 +27,19 @@ export function PortfolioShell({ data }: { data: GitHubData }) {
         Skip to main content
       </a>
       <SiteNav onOpenPalette={() => setPaletteOpen(true)} />
-      <main>
-        <Hero data={data} />
-        <About data={data} />
-        <Projects repos={data.repos} />
-        <Telemetry data={data} />
-        <Experience />
-        <Skills />
-        <Philosophy />
-        <Contact />
-      </main>
+      <ClickSpark sparkColor="#a78bfa" sparkSize={8} sparkRadius={20} sparkCount={6} duration={500}>
+        <main>
+          <Hero data={data} />
+          <About data={data} />
+          <Projects repos={data.repos} />
+          <Telemetry data={data} />
+          <Experience />
+          <Skills />
+          <Philosophy />
+          <Contact />
+        </main>
+      </ClickSpark>
+      <Noise patternAlpha={8} patternSize={200} patternRefreshInterval={4} />
       <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} repos={data.repos} />
     </>
   )
