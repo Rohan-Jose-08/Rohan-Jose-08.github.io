@@ -39,11 +39,11 @@ function ProjectCard({
         <Link
           href={`/projects/${project.slug}`}
           aria-label={`Read the full deep dive on ${project.title}`}
-          className="absolute inset-0 z-0 cursor-pointer rounded-xl"
+          className="absolute inset-0 z-10 cursor-pointer rounded-xl"
         >
           <span className="sr-only">Read the full deep dive on {project.title}</span>
         </Link>
-        <GlareHover width="100%" height="100%" background="transparent" borderRadius="0" borderColor="transparent" glareColor="#ffffff" glareOpacity={0.04} glareSize={300} transitionDuration={800} className="block h-full">
+        <GlareHover width="100%" height="100%" background="transparent" borderRadius="0" borderColor="transparent" glareColor="#ffffff" glareOpacity={0.04} glareSize={300} transitionDuration={800} className="pointer-events-none block h-full">
           <div className="flex items-start justify-between gap-4">
             <div className="flex flex-col gap-1">
               <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">
@@ -54,7 +54,7 @@ function ProjectCard({
               </h3>
               <p className="text-sm text-muted-foreground">{project.tagline}</p>
             </div>
-            <div className="relative z-10 flex items-center gap-2">
+            <div className="pointer-events-auto relative z-20 flex items-center gap-2">
               {project.liveUrl ? (
                 <Magnet magnetStrength={5} padding={10} activeTransition="transform 0.12s ease-out" inactiveTransition="transform 0.25s ease-in-out">
                   <a
