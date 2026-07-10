@@ -119,6 +119,67 @@ export const featuredProjects: FeaturedProject[] = [
     category: 'Systems',
     metrics: '1M+ bytes of Rust source explored',
   },
+  {
+    repo: 'hospitaldatabase',
+    slug: 'hospital-management-platform',
+    title: 'Hospital Management Platform',
+    tagline: 'Role-based healthcare workflows with secure patient access',
+    description:
+      'A deployed Next.js healthcare platform for patients, clinicians, and administrators — appointment booking, test results, two-factor authentication, reminders, and a relational PostgreSQL data model.',
+    challenges: ['Separating patient, doctor, staff, and administrator workflows', 'Modeling appointments, clinical profiles, and test results in PostgreSQL', 'Adding password, authenticator, and SMS-based access controls'],
+    architecture: 'Next.js App Router UI → route handlers and server actions → Prisma → PostgreSQL, with dedicated authentication, notification, and PDF-result flows.',
+    tech: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL', 'JWT', '2FA'],
+    category: 'Full-Stack',
+    liveUrl: 'https://hospitaldatabase.vercel.app',
+  },
+  {
+    repo: 'biology-website-1',
+    slug: 'biology-challenge-site',
+    title: 'Biology Challenge Website',
+    tagline: 'An animated educational web experience',
+    description:
+      'A responsive Biology Challenge site built with Next.js, Tailwind, Radix UI, and Framer Motion, including an animated interactive identity, profile views, and theme-aware UI components.',
+    challenges: ['Creating an interactive animated SVG identity', 'Keeping the UI accessible while layering motion and hover states', 'Organising reusable page and component structure in the App Router'],
+    architecture: 'Next.js App Router pages → reusable UI primitives and theme provider → Framer Motion interactions and Tailwind presentation layer.',
+    tech: ['Next.js', 'TypeScript', 'React', 'Tailwind CSS', 'Framer Motion'],
+    category: 'Full-Stack',
+  },
+  {
+    repo: 'Drone-Main',
+    slug: 'pico-drone-controller',
+    title: 'Pico Drone Flight Controller',
+    tagline: 'Embedded attitude control with IMU feedback and radio input',
+    description:
+      'Raspberry Pi Pico firmware that reads BNO055 orientation data, receives joystick commands over an NRF24L01 radio, and computes roll, pitch, and yaw PID outputs for a drone control loop.',
+    challenges: ['Integrating IMU calibration and NDOF orientation readings', 'Tuning separate PID loops for roll, pitch, and yaw', 'Handling radio input and actuator output within a constrained embedded loop'],
+    architecture: 'NRF24L01 joystick link + BNO055 IMU → Pico control loop → independent PID controllers → UART output for downstream motor control.',
+    tech: ['C++', 'Raspberry Pi Pico', 'BNO055', 'NRF24L01', 'PID Control'],
+    category: 'Robotics',
+  },
+  {
+    repo: 'Mastermind',
+    slug: 'networked-mastermind',
+    title: 'Networked Mastermind',
+    tagline: 'A multiplayer code-breaking game built in GameMaker',
+    description:
+      'An A Level Computer Science project that turns Mastermind into a polished client/server game with maker and breaker roles, turn validation, persistence, audiovisual feedback, and UDP state messages.',
+    challenges: ['Encoding the Mastermind scoring rules into a clear turn state machine', 'Coordinating maker and breaker roles over UDP networking', 'Building save/load and feedback systems around the game loop'],
+    architecture: 'GameMaker rooms and object controllers manage the board and validation; a MultiClient extension carries role and result messages between peers.',
+    tech: ['GameMaker Language', 'UDP Networking', 'Game Design', 'State Machines'],
+    category: 'Full-Stack',
+  },
+  {
+    repo: 'testmod',
+    slug: 'minecraft-mod-prototype',
+    title: 'Minecraft Mod Prototype',
+    tagline: 'A Forge-based Java modding experiment',
+    description:
+      'An early Java/Forge modding project that explores the Minecraft client and content pipeline, including custom model assets and a Gradle-based mod development environment.',
+    challenges: ['Working within the Forge and Gradle toolchain', 'Connecting custom blockbench model assets to game content', 'Navigating a large, event-driven game API and build output'],
+    architecture: 'Gradle/Forge project structure → Java mod entry points and registries → custom model assets → Minecraft runtime integration.',
+    tech: ['Java', 'Minecraft Forge', 'Gradle', 'Blockbench'],
+    category: 'Graphics',
+  },
 ]
 
 export interface ExperienceItem {
