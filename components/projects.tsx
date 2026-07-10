@@ -23,7 +23,7 @@ function ProjectCard({
 }) {
   const githubUrl = repo?.htmlUrl ?? `https://github.com/Rohan-Jose-08`
   return (
-    <StarBorder as="div" color="#a78bfa" speed="8s" thickness={2} className="rounded-xl block">
+    <StarBorder as="div" color="#a78bfa" speed="10s" thickness={2} className="rounded-xl block">
       <motion.article
         variants={staggerItem}
         className="group relative flex flex-col gap-5 overflow-hidden rounded-xl border border-border bg-card p-6 transition-colors duration-300 hover:border-primary/40 md:p-8"
@@ -39,7 +39,7 @@ function ProjectCard({
         >
           <span className="sr-only">Read the full deep dive on {project.title}</span>
         </Link>
-        <GlareHover width="100%" height="100%" background="transparent" borderRadius="0" borderColor="transparent" glareColor="#ffffff" glareOpacity={0.06} glareSize={300} transitionDuration={800} className="block h-full">
+        <GlareHover width="100%" height="100%" background="transparent" borderRadius="0" borderColor="transparent" glareColor="#ffffff" glareOpacity={0.04} glareSize={300} transitionDuration={800} className="block h-full">
           <div className="flex items-start justify-between gap-4">
             <div className="flex flex-col gap-1">
               <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">
@@ -52,7 +52,7 @@ function ProjectCard({
             </div>
             <div className="relative z-10 flex items-center gap-2">
               {project.liveUrl ? (
-                <Magnet magnetStrength={1.5} padding={20} activeTransition="transform 0.2s ease-out" inactiveTransition="transform 0.4s ease-in-out">
+                <Magnet magnetStrength={2.5} padding={15} activeTransition="transform 0.15s ease-out" inactiveTransition="transform 0.3s ease-in-out">
                   <a
                     href={project.liveUrl}
                     target="_blank"
@@ -64,7 +64,7 @@ function ProjectCard({
                   </a>
                 </Magnet>
               ) : null}
-              <Magnet magnetStrength={1.5} padding={20} activeTransition="transform 0.2s ease-out" inactiveTransition="transform 0.4s ease-in-out">
+              <Magnet magnetStrength={2.5} padding={15} activeTransition="transform 0.15s ease-out" inactiveTransition="transform 0.3s ease-in-out">
                 <a
                   href={githubUrl}
                   target="_blank"

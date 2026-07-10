@@ -74,7 +74,7 @@ export function Telemetry({ data }: { data: GitHubData }) {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: '-60px' }}
-          className="grid gap-6 lg:grid-cols-2"
+          className="grid gap-6 lg:grid-cols-2 items-start"
         >
           {/* Metrics strip */}
           <motion.div variants={staggerItem} className="lg:col-span-2">
@@ -109,7 +109,7 @@ export function Telemetry({ data }: { data: GitHubData }) {
           </motion.div>
 
           {/* Language distribution */}
-          <motion.div variants={staggerItem} className="glass flex flex-col gap-5 rounded-xl p-6">
+          <motion.div variants={staggerItem} className="glass flex flex-col gap-5 rounded-xl p-6 lg:col-span-1">
             <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
               language_distribution — by bytes
             </h3>
@@ -137,7 +137,7 @@ export function Telemetry({ data }: { data: GitHubData }) {
           </motion.div>
 
           {/* Repository timeline */}
-          <motion.div variants={staggerItem} className="glass flex flex-col gap-5 rounded-xl p-6">
+          <motion.div variants={staggerItem} className="glass flex flex-col gap-5 rounded-xl p-6 lg:col-span-1">
             <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
               repo_timeline — technology evolution
             </h3>

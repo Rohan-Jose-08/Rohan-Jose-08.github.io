@@ -40,7 +40,7 @@ export function SiteNav({ onOpenPalette }: { onOpenPalette: () => void }) {
         </a>
         <div className="hidden items-center gap-8 md:flex">
           {links.map((l) => (
-            <Magnet key={l.href} magnetStrength={0.6} padding={20} activeTransition="transform 0.2s ease-out" inactiveTransition="transform 0.4s ease-in-out">
+            <Magnet key={l.href} magnetStrength={1.5} padding={12} activeTransition="transform 0.15s ease-out" inactiveTransition="transform 0.3s ease-in-out">
               <a
                 href={l.href}
                 className="text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"

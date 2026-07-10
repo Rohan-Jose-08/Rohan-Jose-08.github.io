@@ -32,7 +32,7 @@ export function Contact() {
               {links.map((l) => {
                 const Icon = l.icon
                 return (
-                  <Magnet key={l.label} magnetStrength={1.2} padding={30} activeTransition="transform 0.2s ease-out" inactiveTransition="transform 0.4s ease-in-out">
+                  <Magnet key={l.label} magnetStrength={2} padding={20} activeTransition="transform 0.15s ease-out" inactiveTransition="transform 0.3s ease-in-out">
                     <a
                       href={l.href}
                       {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}

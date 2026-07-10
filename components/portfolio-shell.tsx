@@ -27,7 +27,7 @@ export function PortfolioShell({ data }: { data: GitHubData }) {
         Skip to main content
       </a>
       <SiteNav onOpenPalette={() => setPaletteOpen(true)} />
-      <ClickSpark sparkColor="#a78bfa" sparkSize={8} sparkRadius={20} sparkCount={6} duration={500}>
+      <ClickSpark sparkColor="#a78bfa" sparkSize={5} sparkRadius={12} sparkCount={4} duration={400}>
         <main>
           <Hero data={data} />
           <About data={data} />
@@ -39,7 +39,7 @@ export function PortfolioShell({ data }: { data: GitHubData }) {
           <Contact />
         </main>
       </ClickSpark>
-      <Noise patternAlpha={8} patternSize={200} patternRefreshInterval={4} />
+      <Noise patternAlpha={5} patternSize={200} patternRefreshInterval={4} />
       <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} repos={data.repos} />
     </>
   )

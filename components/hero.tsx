@@ -56,12 +56,12 @@ export function Hero({ data }: { data: GitHubData }) {
             text={`${data.profile.name}.`}
             animateBy="words"
             direction="top"
-            delay={120}
-            stepDuration={0.3}
+            delay={80}
+            stepDuration={0.2}
             className="text-balance text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl"
-            animationFrom={{ filter: 'blur(10px)', opacity: 0, y: -30 }}
+            animationFrom={{ filter: 'blur(6px)', opacity: 0, y: -12 }}
             animationTo={[
-              { filter: 'blur(4px)', opacity: 0.6, y: -5 },
+              { filter: 'blur(2px)', opacity: 0.7, y: -2 },
               { filter: 'blur(0px)', opacity: 1, y: 0 },
             ]}
             easing="easeOut"
@@ -72,12 +72,12 @@ export function Hero({ data }: { data: GitHubData }) {
             text="Engineering from bare metal to AI."
             animateBy="words"
             direction="top"
-            delay={150}
-            stepDuration={0.25}
+            delay={100}
+            stepDuration={0.18}
             className="text-gradient text-balance text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl"
-            animationFrom={{ filter: 'blur(10px)', opacity: 0, y: -20 }}
+            animationFrom={{ filter: 'blur(6px)', opacity: 0, y: -10 }}
             animationTo={[
-              { filter: 'blur(3px)', opacity: 0.5, y: -3 },
+              { filter: 'blur(1.5px)', opacity: 0.6, y: -1 },
               { filter: 'blur(0px)', opacity: 1, y: 0 },
             ]}
             easing="easeOut"
@@ -98,7 +98,7 @@ export function Hero({ data }: { data: GitHubData }) {
           </motion.div>
 
           <motion.div {...fade(0.3)} className="flex flex-wrap items-center gap-4">
-            <Magnet magnetStrength={1.5} padding={40} activeTransition="transform 0.2s ease-out" inactiveTransition="transform 0.4s ease-in-out">
+            <Magnet magnetStrength={3} padding={30} activeTransition="transform 0.15s ease-out" inactiveTransition="transform 0.3s ease-in-out">
               <a
                 href="#projects"
                 className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
@@ -107,7 +107,7 @@ export function Hero({ data }: { data: GitHubData }) {
                 <ArrowDown className="h-4 w-4" aria-hidden="true" />
               </a>
             </Magnet>
-            <Magnet magnetStrength={1.5} padding={40} activeTransition="transform 0.2s ease-out" inactiveTransition="transform 0.4s ease-in-out">
+            <Magnet magnetStrength={3} padding={30} activeTransition="transform 0.15s ease-out" inactiveTransition="transform 0.3s ease-in-out">
               <a
                 href={data.profile.htmlUrl}
                 target="_blank"
