@@ -52,7 +52,7 @@ function ProjectCard({
             </div>
             <div className="relative z-10 flex items-center gap-2">
               {project.liveUrl ? (
-                <Magnet magnetStrength={2.5} padding={15} activeTransition="transform 0.15s ease-out" inactiveTransition="transform 0.3s ease-in-out">
+                <Magnet magnetStrength={5} padding={10} activeTransition="transform 0.12s ease-out" inactiveTransition="transform 0.25s ease-in-out">
                   <a
                     href={project.liveUrl}
                     target="_blank"
@@ -64,7 +64,7 @@ function ProjectCard({
                   </a>
                 </Magnet>
               ) : null}
-              <Magnet magnetStrength={2.5} padding={15} activeTransition="transform 0.15s ease-out" inactiveTransition="transform 0.3s ease-in-out">
+              <Magnet magnetStrength={5} padding={10} activeTransition="transform 0.12s ease-out" inactiveTransition="transform 0.25s ease-in-out">
                 <a
                   href={githubUrl}
                   target="_blank"

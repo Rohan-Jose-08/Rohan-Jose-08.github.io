@@ -98,16 +98,16 @@ export function Hero({ data }: { data: GitHubData }) {
           </motion.div>
 
           <motion.div {...fade(0.3)} className="flex flex-wrap items-center gap-4">
-            <Magnet magnetStrength={3} padding={30} activeTransition="transform 0.15s ease-out" inactiveTransition="transform 0.3s ease-in-out">
+            <Magnet magnetStrength={6} padding={16} activeTransition="transform 0.12s ease-out" inactiveTransition="transform 0.25s ease-in-out">
               <a
                 href="#projects"
-                className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform duration-200 hover:scale-[1.03] active:scale-[0.98]"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
               >
                 View projects
                 <ArrowDown className="h-4 w-4" aria-hidden="true" />
               </a>
             </Magnet>
-            <Magnet magnetStrength={3} padding={30} activeTransition="transform 0.15s ease-out" inactiveTransition="transform 0.3s ease-in-out">
+            <Magnet magnetStrength={6} padding={16} activeTransition="transform 0.12s ease-out" inactiveTransition="transform 0.25s ease-in-out">
               <a
                 href={data.profile.htmlUrl}
                 target="_blank"

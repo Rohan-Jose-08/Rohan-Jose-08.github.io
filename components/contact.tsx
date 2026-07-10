@@ -32,11 +32,11 @@ export function Contact() {
               {links.map((l) => {
                 const Icon = l.icon
                 return (
-                  <Magnet key={l.label} magnetStrength={2} padding={20} activeTransition="transform 0.15s ease-out" inactiveTransition="transform 0.3s ease-in-out">
+                  <Magnet key={l.label} magnetStrength={6} padding={12} activeTransition="transform 0.12s ease-out" inactiveTransition="transform 0.25s ease-in-out">
                     <a
                       href={l.href}
                       {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                      className="glass inline-flex cursor-pointer items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-200 hover:scale-[1.03] hover:bg-secondary active:scale-[0.98]"
+                      className="glass inline-flex cursor-pointer items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-200 hover:scale-[1.02] hover:bg-secondary active:scale-[0.98]"
                     >
                       <Icon className="h-4 w-4 text-primary" aria-hidden="true" />
                       {l.label}
