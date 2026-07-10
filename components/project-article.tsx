@@ -2,9 +2,19 @@ import Link from 'next/link'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Clock, GitBranch, Layers, Lightbulb, Telescope } from 'lucide-react'
 import { Github } from '@/components/brand-icons'
 import { Reveal } from '@/components/motion-primitives'
+import { Highlight, themes } from 'prism-react-renderer'
 import type { FeaturedProject } from '@/lib/portfolio-data'
 import type { ProjectArticle } from '@/lib/project-articles'
 import { GITHUB_USERNAME } from '@/lib/github'
+
+const LANGUAGE_MAP: Record<string, string> = {
+  asm: 'c',
+  c: 'c',
+  typescript: 'typescript',
+  cuda: 'cpp',
+  cpp: 'cpp',
+  rust: 'rust',
+}
 
 function CodeBlock({ language, label, snippet }: { language: string; label: string; snippet: string }) {
   return (
@@ -15,9 +25,22 @@ function CodeBlock({ language, label, snippet }: { language: string; label: stri
           {language}
         </span>
       </figcaption>
-      <pre className="overflow-x-auto p-4 text-[13px] leading-relaxed">
-        <code className="font-mono text-foreground/90">{snippet}</code>
-      </pre>
+      <Highlight theme={themes.nightOwl} code={snippet.trim()} language={LANGUAGE_MAP[language] ?? 'c'}>
+        {({ tokens, getLineProps, getTokenProps }) => (
+          <pre className="overflow-x-auto p-4 text-[13px] leading-relaxed" style={{ backgroundColor: 'transparent' }}>
+            {tokens.map((line, i) => (
+              <div key={i} {...getLineProps({ line })} className="table-row">
+                <span className="table-cell select-none pr-4 text-right text-muted-foreground/40">{i + 1}</span>
+                <span className="table-cell">
+                  {line.map((token, key) => (
+                    <span key={key} {...getTokenProps({ token })} />
+                  ))}
+                </span>
+              </div>
+            ))}
+          </pre>
+        )}
+      </Highlight>
     </figure>
   )
 }
