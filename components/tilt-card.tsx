@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState, type ReactNode, type MouseEvent } from 'react'
-import { motion, useMotionValue, useSpring } from 'framer-motion'
+import { motion, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion'
 
 interface TiltCardProps {
   children: ReactNode
@@ -35,6 +35,8 @@ export function TiltCard({
   const springConfig = { stiffness: 260, damping: 20, mass: 0.8 }
   const springRotateX = useSpring(rotateX, springConfig)
   const springRotateY = useSpring(rotateY, springConfig)
+  
+  const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,${glareOpacity}), transparent 60%)`
 
   const handleMouseMove = (e: MouseEvent) => {
     if (!ref.current) return
@@ -62,7 +64,7 @@ export function TiltCard({
     glareY.set(50)
   }
 
-  const MotionTag = motion.create(Tag)
+  const MotionTag = Tag === 'article' ? motion.article : Tag === 'li' ? motion.li : motion.div
 
   return (
     <MotionTag
@@ -76,6 +78,8 @@ export function TiltCard({
         transformStyle: 'preserve-3d',
         rotateX: springRotateX,
         rotateY: springRotateY,
+      }}
+      animate={{
         scale: isHovered ? scaleOnHover : 1,
       }}
       transition={{ scale: { type: 'spring', stiffness: 300, damping: 20 } }}
@@ -86,13 +90,9 @@ export function TiltCard({
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 rounded-[inherit] z-10"
           style={{
-            background: `radial-gradient(circle at ${glareX.get()}% ${glareY.get()}%, rgba(255,255,255,${glareOpacity}), transparent 60%)`,
-            opacity: isHovered ? 1 : 0,
+            background: glareBackground,
           }}
           animate={{
-            background: isHovered
-              ? `radial-gradient(circle at ${glareX.get()}% ${glareY.get()}%, rgba(255,255,255,${glareOpacity}), transparent 60%)`
-              : `radial-gradient(circle at 50% 50%, rgba(255,255,255,0), transparent 60%)`,
             opacity: isHovered ? 1 : 0,
           }}
           transition={{ opacity: { duration: 0.2 } }}
