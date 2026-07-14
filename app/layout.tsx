@@ -59,6 +59,7 @@ export const viewport: Viewport = {
 
 import { CrtOverlay } from '@/components/crt-overlay'
 import { TerminalBoot } from '@/components/terminal-boot'
+import { Aurora } from '@/components/aurora'
 
 export default function RootLayout({
   children,
@@ -72,6 +73,7 @@ export default function RootLayout({
           aria-hidden="true"
           className="grid-bg grid-bg-drift pointer-events-none fixed inset-0 z-[-1] opacity-30"
         />
+        <Aurora />
         <CrtOverlay />
         <TerminalBoot />
         {children}
