@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { Box, Cpu, Layers3, Network, Server, Sparkles } from 'lucide-react'
 import { SectionHeading, staggerContainer, staggerItem } from '@/components/motion-primitives'
 import { Badge } from '@/components/ui/badge'
+import { BorderBeam } from '@/components/border-beam'
 import { skillDomains } from '@/lib/portfolio-data'
 
 const icons = [Cpu, Layers3, Sparkles, Box, Network, Server]
@@ -32,8 +33,9 @@ export function Skills() {
                 variants={staggerItem}
                 whileHover={{ y: -4 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-                className="glass group relative flex flex-col gap-4 overflow-hidden rounded-xl p-6 transition-colors duration-300 hover:border-primary/40"
+                className="glass group relative flex flex-col gap-4 overflow-hidden rounded-xl p-6 transition-colors duration-300"
               >
+                <BorderBeam duration={6} size={200} className="opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute -top-px left-1/2 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"

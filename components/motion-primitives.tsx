@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import type { ReactNode } from 'react'
+import { GlitchText } from '@/components/glitch-text'
 
 const easeOut = [0.16, 1, 0.3, 1] as const
 
@@ -52,7 +53,9 @@ export function SectionHeading({
       <span className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
         {eyebrow}
       </span>
-      <h2 className="text-balance text-3xl font-semibold tracking-tight md:text-4xl">{title}</h2>
+      <h2 className="text-balance text-3xl font-semibold tracking-tight md:text-4xl">
+        <GlitchText text={title} />
+      </h2>
       {description ? (
         <p className="max-w-2xl text-pretty leading-relaxed text-muted-foreground">
           {description}

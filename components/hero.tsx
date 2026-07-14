@@ -51,10 +51,6 @@ export function Hero({ data }: { data: GitHubData }) {
       <Aurora />
       <div
         aria-hidden="true"
-        className="grid-bg grid-bg-drift pointer-events-none absolute inset-0 opacity-60"
-      />
-      <div
-        aria-hidden="true"
         className="pointer-events-none absolute -top-40 left-1/2 h-[500px] w-[800px] -translate-x-1/2 rounded-full bg-primary/10 blur-[140px]"
       />
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 pt-28 pb-16">

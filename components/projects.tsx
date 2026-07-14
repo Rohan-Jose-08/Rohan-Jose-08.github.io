@@ -12,6 +12,7 @@ import Magnet from '@/components/Magnet'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { featuredProjects, type FeaturedProject } from '@/lib/portfolio-data'
+import { BorderBeam } from '@/components/border-beam'
 import type { GitHubRepo } from '@/lib/github'
 
 const categories = ['All', 'Systems', 'Graphics', 'AI', 'Full-Stack', 'Robotics'] as const
@@ -28,8 +29,9 @@ function ProjectCard({
     <StarBorder as="div" color="#a78bfa" speed="10s" thickness={2} className="rounded-xl block">
       <motion.article
         variants={staggerItem}
-        className="group relative flex flex-col gap-5 overflow-hidden rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:border-primary/40 hover:scale-[1.005] md:p-8"
+        className="group relative flex flex-col gap-5 overflow-hidden rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:scale-[1.005] md:p-8"
       >
+        <BorderBeam duration={8} size={300} className="opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -top-24 -right-24 h-48 w-48 rounded-full bg-primary/5 blur-3xl transition-opacity duration-500 opacity-0 group-hover:opacity-100"
