@@ -2,7 +2,10 @@
 
 import { motion } from 'framer-motion'
 import { Reveal, SectionHeading, staggerContainer, staggerItem } from '@/components/motion-primitives'
+import { CountUp } from '@/components/count-up'
 import type { GitHubData, ContributionDay } from '@/lib/github'
+
+const easeOut = [0.16, 1, 0.3, 1] as const
 
 const LEVEL_CLASSES = [
   'bg-muted',
@@ -31,19 +34,32 @@ function Heatmap({ days }: { days: ContributionDay[] }) {
   }
   return (
     <div className="overflow-x-auto pb-2" role="img" aria-label="GitHub contribution heatmap for the last year">
-      <div className="flex min-w-[720px] gap-[3px]">
+      <motion.div
+        className="flex min-w-[720px] gap-[3px]"
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: '-40px' }}
+        variants={{
+          hidden: {},
+          show: { transition: { staggerChildren: 0.004 } },
+        }}
+      >
         {weeks.map((week, wi) => (
           <div key={wi} className="flex flex-col gap-[3px]">
             {week.map((day) => (
-              <div
+              <motion.div
                 key={day.date}
                 title={`${day.date}: ${day.count} contribution${day.count === 1 ? '' : 's'}`}
-                className={`h-2.5 w-2.5 rounded-[2px] ${LEVEL_CLASSES[Math.min(day.level, 4)]}`}
+                variants={{
+                  hidden: { opacity: 0, scale: 0.4 },
+                  show: { opacity: 1, scale: 1, transition: { duration: 0.25, ease: easeOut } },
+                }}
+                className={`h-2.5 w-2.5 rounded-[2px] transition-transform duration-200 hover:scale-150 hover:ring-1 hover:ring-primary/60 ${LEVEL_CLASSES[Math.min(day.level, 4)]}`}
               />
             ))}
           </div>
         ))}
-      </div>
+      </motion.div>
     </div>
   )
 }
@@ -79,12 +95,24 @@ export function Telemetry({ data }: { data: GitHubData }) {
           {/* Metrics strip */}
           <motion.div variants={staggerItem} className="lg:col-span-2">
             <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-4">
-              {metrics.map((m) => (
-                <div key={m.label} className="flex flex-col gap-1 bg-card px-5 py-4">
-                  <dt className="font-mono text-[11px] text-muted-foreground">{m.label}</dt>
-                  <dd className="text-2xl font-semibold tabular-nums">{m.value}</dd>
-                </div>
-              ))}
+              {metrics.map((m) => {
+                const isNumeric = typeof m.value === 'number'
+                return (
+                  <div
+                    key={m.label}
+                    className="group/metric relative flex flex-col gap-1 bg-card px-5 py-4 transition-colors duration-300 hover:bg-secondary/40"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-gradient-to-r from-primary/0 via-primary to-primary/0 transition-transform duration-500 group-hover/metric:scale-x-100"
+                    />
+                    <dt className="font-mono text-[11px] text-muted-foreground">{m.label}</dt>
+                    <dd className="text-2xl font-semibold tabular-nums">
+                      {isNumeric ? <CountUp value={m.value as number} /> : m.value}
+                    </dd>
+                  </div>
+                )
+              })}
             </dl>
           </motion.div>
 
@@ -122,13 +150,21 @@ export function Telemetry({ data }: { data: GitHubData }) {
                       {lang.percent.toFixed(1)}%
                     </span>
                   </div>
-                  <div className="h-1.5 overflow-hidden rounded-full bg-muted">
+                  <div className="relative h-1.5 overflow-hidden rounded-full bg-muted">
                     <motion.div
                       className={`h-full rounded-full ${LANGUAGE_COLORS[lang.name] ?? 'bg-primary/40'}`}
                       initial={{ width: 0 }}
                       whileInView={{ width: `${Math.max(lang.percent, 2)}%` }}
                       viewport={{ once: true }}
-                      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                      transition={{ duration: 0.9, ease: easeOut }}
+                    />
+                    <motion.div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-y-0 w-12 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                      initial={{ x: '-200%' }}
+                      whileInView={{ x: '500%' }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 1.4, delay: 0.6, ease: 'easeInOut' }}
                     />
                   </div>
                 </li>
@@ -141,11 +177,27 @@ export function Telemetry({ data }: { data: GitHubData }) {
             <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
               repo_timeline — technology evolution
             </h3>
-            <ol className="relative flex flex-col gap-4 border-l border-border pl-5">
+            <motion.ol
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: '-40px' }}
+              variants={{
+                hidden: {},
+                show: { transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+              }}
+              className="relative flex flex-col gap-4 border-l border-border pl-5"
+            >
               {sortedRepos.map((repo) => (
-                <li key={repo.name} className="relative flex flex-col gap-0.5">
+                <motion.li
+                  key={repo.name}
+                  variants={{
+                    hidden: { opacity: 0, x: -12 },
+                    show: { opacity: 1, x: 0, transition: { duration: 0.4, ease: easeOut } },
+                  }}
+                  className="group/repo relative flex flex-col gap-0.5"
+                >
                   <span
-                    className="absolute -left-[26px] top-1.5 h-2 w-2 rounded-full bg-primary"
+                    className="absolute -left-[26px] top-1.5 h-2 w-2 rounded-full bg-primary transition-transform duration-300 group-hover/repo:scale-150 group-hover/repo:shadow-[0_0_10px_2px_oklch(0.77_0.19_155/0.6)]"
                     aria-hidden="true"
                   />
                   <div className="flex items-baseline justify-between gap-3">
@@ -171,9 +223,9 @@ export function Telemetry({ data }: { data: GitHubData }) {
                       year: 'numeric',
                     })}
                   </span>
-                </li>
+                </motion.li>
               ))}
-            </ol>
+            </motion.ol>
           </motion.div>
         </motion.div>
 

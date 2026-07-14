@@ -19,17 +19,32 @@ export function Experience() {
         viewport={{ once: true, margin: '-60px' }}
         className="grid gap-6 md:grid-cols-2"
       >
-        {experience.map((item) => (
+        {experience.map((item, i) => (
           <motion.article
             key={item.role + item.org}
             variants={staggerItem}
-            className="group flex flex-col gap-4 rounded-xl border border-border bg-card p-6 transition-colors duration-300 hover:border-primary/40 md:p-8"
+            whileHover={{ y: -4 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+            className="group relative flex flex-col gap-4 overflow-hidden rounded-xl border border-border bg-card p-6 transition-colors duration-300 hover:border-primary/40 md:p-8"
           >
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-px left-1/2 h-px w-1/2 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            />
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+            />
             <div className="flex flex-col gap-1">
-              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">
+              <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-primary">
+                <span className="font-mono text-[10px] text-muted-foreground/60">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
                 {item.period}
               </span>
-              <h3 className="text-lg font-semibold tracking-tight">{item.role}</h3>
+              <h3 className="text-lg font-semibold tracking-tight transition-colors duration-300 group-hover:text-primary">
+                {item.role}
+              </h3>
               <p className="text-sm text-muted-foreground">{item.org}</p>
             </div>
             <p className="text-pretty text-sm leading-relaxed text-muted-foreground">
@@ -49,7 +64,7 @@ export function Experience() {
               {item.tags.map((t) => (
                 <span
                   key={t}
-                  className="rounded-md border border-border bg-secondary px-2 py-0.5 font-mono text-[11px] text-secondary-foreground"
+                  className="rounded-md border border-border bg-secondary px-2 py-0.5 font-mono text-[11px] text-secondary-foreground transition-colors duration-200 hover:border-primary/40 hover:text-primary"
                 >
                   {t}
                 </span>

@@ -13,6 +13,7 @@ import { Contact } from '@/components/contact'
 import { CommandPalette } from '@/components/command-palette'
 import Noise from '@/components/Noise'
 import ClickSpark from '@/components/ClickSpark'
+import { CursorSpotlight } from '@/components/cursor-spotlight'
 import type { GitHubData } from '@/lib/github'
 
 export function PortfolioShell({ data }: { data: GitHubData }) {
@@ -26,6 +27,7 @@ export function PortfolioShell({ data }: { data: GitHubData }) {
       >
         Skip to main content
       </a>
+      <CursorSpotlight />
       <SiteNav onOpenPalette={() => setPaletteOpen(true)} />
       <ClickSpark sparkColor="#a78bfa" sparkSize={5} sparkRadius={12} sparkCount={4} duration={400}>
         <main>
