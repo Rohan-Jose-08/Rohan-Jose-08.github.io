@@ -6,11 +6,9 @@ import { motion } from 'framer-motion'
 import { ArrowRight, ArrowUpRight, GitBranch, Layers } from 'lucide-react'
 import { Github } from '@/components/brand-icons'
 import { Reveal, SectionHeading, staggerContainer, staggerItem } from '@/components/motion-primitives'
-import GlareHover from '@/components/GlareHover'
-import StarBorder from '@/components/StarBorder'
+import { TiltCard } from '@/components/tilt-card'
 import Magnet from '@/components/Magnet'
 import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { featuredProjects, type FeaturedProject } from '@/lib/portfolio-data'
 import { BorderBeam } from '@/components/border-beam'
 import type { GitHubRepo } from '@/lib/github'
@@ -26,10 +24,10 @@ function ProjectCard({
 }) {
   const githubUrl = repo?.htmlUrl ?? `https://github.com/Rohan-Jose-08`
   return (
-    <StarBorder as="div" color="#a78bfa" speed="10s" thickness={2} className="rounded-xl block">
+    <TiltCard className="rounded-xl block" maxTilt={4} scaleOnHover={1.008}>
       <motion.article
         variants={staggerItem}
-        className="group relative flex flex-col gap-5 overflow-hidden rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:scale-[1.005] md:p-8"
+        className="group relative flex flex-col gap-5 overflow-hidden rounded-xl border border-border bg-card p-6 transition-all duration-300 md:p-8"
       >
         <BorderBeam duration={8} size={300} className="opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         <div
@@ -47,96 +45,95 @@ function ProjectCard({
         >
           <span className="sr-only">Read the full deep dive on {project.title}</span>
         </Link>
-        <GlareHover width="100%" height="100%" background="transparent" borderRadius="0" borderColor="transparent" glareColor="#ffffff" glareOpacity={0.04} glareSize={300} transitionDuration={800} className="pointer-events-none block h-full">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex flex-col gap-1">
-              <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">
-                {project.category}
-              </span>
-              <h3 className="text-xl font-semibold tracking-tight transition-colors duration-300 group-hover:text-primary md:text-2xl">
-                {project.title}
-              </h3>
-              <p className="text-sm text-muted-foreground">{project.tagline}</p>
-            </div>
-            <div className="pointer-events-auto relative z-20 flex items-center gap-2">
-              {project.liveUrl ? (
-                <Magnet magnetStrength={5} padding={10} activeTransition="transform 0.12s ease-out" inactiveTransition="transform 0.25s ease-in-out">
-                  <a
-                    href={project.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`Live demo of ${project.title}`}
-                    className="glass cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                  </a>
-                </Magnet>
-              ) : null}
+
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col gap-1">
+            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">
+              {project.category}
+            </span>
+            <h3 className="text-xl font-semibold tracking-tight transition-colors duration-300 group-hover:text-primary md:text-2xl">
+              {project.title}
+            </h3>
+            <p className="text-sm text-muted-foreground">{project.tagline}</p>
+          </div>
+          <div className="pointer-events-auto relative z-20 flex items-center gap-2">
+            {project.liveUrl ? (
               <Magnet magnetStrength={5} padding={10} activeTransition="transform 0.12s ease-out" inactiveTransition="transform 0.25s ease-in-out">
                 <a
-                  href={githubUrl}
+                  href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`${project.title} on GitHub`}
+                  aria-label={`Live demo of ${project.title}`}
                   className="glass cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  <Github className="h-4 w-4" aria-hidden="true" />
+                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
                 </a>
               </Magnet>
-            </div>
-          </div>
-
-          <p className="text-pretty leading-relaxed text-muted-foreground">{project.description}</p>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="flex flex-col gap-2 rounded-lg bg-muted/50 p-4">
-              <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
-                <GitBranch className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-                Challenges solved
-              </span>
-              <ul className="flex flex-col gap-1.5 text-sm text-muted-foreground">
-                {project.challenges.map((c) => (
-                  <li key={c} className="flex gap-2">
-                    <span className="text-primary" aria-hidden="true">
-                      —
-                    </span>
-                    {c}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="flex flex-col gap-2 rounded-lg bg-muted/50 p-4">
-              <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
-                <Layers className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-                Architecture
-              </span>
-              <p className="text-sm leading-relaxed text-muted-foreground">{project.architecture}</p>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap gap-2">
-              {project.tech.map((t) => (
-                <Badge key={t} variant="secondary" className="font-mono text-xs">
-                  {t}
-                </Badge>
-              ))}
-            </div>
-            {project.metrics ? (
-              <span className="font-mono text-xs text-primary">{project.metrics}</span>
             ) : null}
+            <Magnet magnetStrength={5} padding={10} activeTransition="transform 0.12s ease-out" inactiveTransition="transform 0.25s ease-in-out">
+              <a
+                href={githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${project.title} on GitHub`}
+                className="glass cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <Github className="h-4 w-4" aria-hidden="true" />
+              </a>
+            </Magnet>
           </div>
+        </div>
 
-          <span className="flex items-center gap-2 font-mono text-xs text-muted-foreground transition-colors duration-300 group-hover:text-primary">
-            Read the deep dive
-            <ArrowRight
-              className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
-              aria-hidden="true"
-            />
-          </span>
-        </GlareHover>
+        <p className="text-pretty leading-relaxed text-muted-foreground">{project.description}</p>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="flex flex-col gap-2 rounded-lg bg-muted/50 p-4">
+            <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+              <GitBranch className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+              Challenges solved
+            </span>
+            <ul className="flex flex-col gap-1.5 text-sm text-muted-foreground">
+              {project.challenges.map((c) => (
+                <li key={c} className="flex gap-2">
+                  <span className="text-primary" aria-hidden="true">
+                    —
+                  </span>
+                  {c}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex flex-col gap-2 rounded-lg bg-muted/50 p-4">
+            <span className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+              <Layers className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+              Architecture
+            </span>
+            <p className="text-sm leading-relaxed text-muted-foreground">{project.architecture}</p>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap gap-2">
+            {project.tech.map((t) => (
+              <Badge key={t} variant="secondary" className="press hover-lift font-mono text-xs">
+                {t}
+              </Badge>
+            ))}
+          </div>
+          {project.metrics ? (
+            <span className="font-mono text-xs text-primary">{project.metrics}</span>
+          ) : null}
+        </div>
+
+        <span className="flex items-center gap-2 font-mono text-xs text-muted-foreground transition-colors duration-300 group-hover:text-primary">
+          Read the deep dive
+          <ArrowRight
+            className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
+            aria-hidden="true"
+          />
+        </span>
       </motion.article>
-    </StarBorder>
+    </TiltCard>
   )
 }
 
@@ -152,20 +149,28 @@ export function Projects({ repos }: { repos: GitHubRepo[] }) {
         title="Projects built from first principles"
         description="Pulled from live GitHub repositories — kernels, renderers, and products, each documented with the hard problems they solve."
       />
-      <Reveal className="mb-10 flex flex-wrap gap-2">
-        <Tabs value={filter} onValueChange={(v) => setFilter(v as typeof filter)} className="w-full justify-start">
-          <TabsList variant="line" className="bg-card/40 rounded-xl p-1 border border-border flex-wrap h-auto gap-2">
-            {categories.map((c) => (
-              <TabsTrigger
-                key={c}
-                value={c}
-                className="font-mono text-xs px-4 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:after:hidden rounded-lg hover:text-foreground"
-              >
+      <Reveal className="mb-10">
+        <div className="flex flex-wrap gap-2 rounded-xl border border-border bg-card/40 p-1">
+          {categories.map((c) => (
+            <button
+              key={c}
+              type="button"
+              onClick={() => setFilter(c)}
+              className="press relative rounded-lg px-4 py-2 font-mono text-xs text-muted-foreground transition-colors duration-200 hover:text-foreground cursor-pointer"
+            >
+              {filter === c && (
+                <motion.span
+                  layoutId="active-project-filter"
+                  className="absolute inset-0 rounded-lg bg-primary"
+                  transition={{ type: 'spring', stiffness: 400, damping: 28 }}
+                />
+              )}
+              <span className={`relative z-10 ${filter === c ? 'text-primary-foreground' : ''}`}>
                 {c}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
+              </span>
+            </button>
+          ))}
+        </div>
       </Reveal>
       <motion.div
         variants={staggerContainer}

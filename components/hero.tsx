@@ -55,9 +55,10 @@ export function Hero({ data }: { data: GitHubData }) {
       />
       <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-10 px-6 pt-28 pb-16">
         <motion.div {...fade(0)} className="flex items-center gap-3 font-mono text-xs text-muted-foreground">
-          <span className="relative inline-flex h-2 w-2" aria-hidden="true">
+          <span className="relative inline-flex h-2 w-2 tooltip-trigger cursor-default" aria-hidden="true">
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
+            <span className="tooltip-content whitespace-nowrap">Available for opportunities</span>
           </span>
           <span>
             <span className="text-primary">$</span> currently_building ={' '}
@@ -139,7 +140,7 @@ export function Hero({ data }: { data: GitHubData }) {
           {stats.map((s) => (
             <div
               key={s.label}
-              className="group/stat relative flex flex-col gap-1 bg-card px-5 py-4 transition-colors duration-300 hover:bg-secondary/40"
+              className="group/stat relative flex flex-col gap-1 bg-card px-5 py-4 transition-colors duration-300 hover:bg-secondary/40 press tooltip-trigger"
             >
               <span
                 aria-hidden="true"
@@ -152,6 +153,12 @@ export function Hero({ data }: { data: GitHubData }) {
                 <CountUp value={s.value} />
                 {s.suffix ? <span className="text-primary">{s.suffix}</span> : null}
               </dd>
+              <span className="tooltip-content">
+                {s.label.includes('Contributions') ? 'Contributions in the past 12 months via GitHub API' : 
+                 s.label.includes('Public') ? 'Open source repositories on GitHub' :
+                 s.label.includes('streak') ? 'Longest consecutive days of GitHub activity' :
+                 'Languages used across public repositories'}
+              </span>
             </div>
           ))}
         </motion.dl>

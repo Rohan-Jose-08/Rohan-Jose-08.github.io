@@ -54,7 +54,8 @@ function Heatmap({ days }: { days: ContributionDay[] }) {
                   hidden: { opacity: 0, scale: 0.4 },
                   show: { opacity: 1, scale: 1, transition: { duration: 0.25, ease: easeOut } },
                 }}
-                className={`h-2.5 w-2.5 rounded-[2px] transition-transform duration-200 hover:scale-150 hover:ring-1 hover:ring-primary/60 ${LEVEL_CLASSES[Math.min(day.level, 4)]}`}
+                className={`h-2.5 w-2.5 rounded-[2px] transition-transform duration-200 hover:scale-[1.8] hover:ring-1 hover:ring-primary/60 cursor-pointer press hover:z-10 relative ${LEVEL_CLASSES[Math.min(day.level, 4)]}`}
+                onClick={() => window.open(`https://github.com/Rohan-Jose-08?tab=overview&from=${day.date}&to=${day.date}`, '_blank', 'noopener,noreferrer')}
               />
             ))}
           </div>
@@ -66,8 +67,8 @@ function Heatmap({ days }: { days: ContributionDay[] }) {
 
 export function Telemetry({ data }: { data: GitHubData }) {
   const sortedRepos = [...data.repos].sort(
-    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-  )
+    (a, b) => new Date(b.pushedAt).getTime() - new Date(a.pushedAt).getTime()
+  ).slice(0, 5) // Show top 5 most recently active
 
   const metrics = [
     { label: 'commits.last_year', value: data.totalContributions },
@@ -100,7 +101,7 @@ export function Telemetry({ data }: { data: GitHubData }) {
                 return (
                   <div
                     key={m.label}
-                    className="group/metric relative flex flex-col gap-1 bg-card px-5 py-4 transition-colors duration-300 hover:bg-secondary/40"
+                    className="group/metric relative flex flex-col gap-1 bg-card px-5 py-4 transition-colors duration-300 hover:bg-secondary/40 press"
                   >
                     <span
                       aria-hidden="true"
@@ -119,10 +120,12 @@ export function Telemetry({ data }: { data: GitHubData }) {
           {/* Heatmap */}
           <motion.div
             variants={staggerItem}
-            className="glass flex flex-col gap-4 rounded-xl p-6 lg:col-span-2"
+            className="glass flex flex-col gap-4 rounded-xl p-6 lg:col-span-2 relative overflow-hidden group"
           >
+            <span className="pointer-events-none absolute -top-px left-1/2 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
             <div className="flex items-center justify-between">
-              <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary/60" />
                 contribution_matrix — 52w
               </h3>
               <div className="flex items-center gap-1.5 font-mono text-[10px] text-muted-foreground">
@@ -137,8 +140,10 @@ export function Telemetry({ data }: { data: GitHubData }) {
           </motion.div>
 
           {/* Language distribution */}
-          <motion.div variants={staggerItem} className="glass flex flex-col gap-5 rounded-xl p-6 lg:col-span-1">
-            <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
+          <motion.div variants={staggerItem} className="glass flex flex-col gap-5 rounded-xl p-6 lg:col-span-1 relative group">
+            <span className="pointer-events-none absolute -top-px left-1/2 h-px w-1/2 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+            <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+               <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary/60" />
               language_distribution — by bytes
             </h3>
             <ul className="flex flex-col gap-3">
@@ -150,7 +155,7 @@ export function Telemetry({ data }: { data: GitHubData }) {
                       {lang.percent.toFixed(1)}%
                     </span>
                   </div>
-                  <div className="relative h-1.5 overflow-hidden rounded-full bg-muted">
+                  <div className="relative h-1.5 overflow-hidden rounded-full bg-muted tooltip-trigger">
                     <motion.div
                       className={`h-full rounded-full ${LANGUAGE_COLORS[lang.name] ?? 'bg-primary/40'}`}
                       initial={{ width: 0 }}
@@ -166,6 +171,7 @@ export function Telemetry({ data }: { data: GitHubData }) {
                       viewport={{ once: true }}
                       transition={{ duration: 1.4, delay: 0.6, ease: 'easeInOut' }}
                     />
+                    <span className="tooltip-content">{lang.name} codebase analysis</span>
                   </div>
                 </li>
               ))}
@@ -173,9 +179,11 @@ export function Telemetry({ data }: { data: GitHubData }) {
           </motion.div>
 
           {/* Repository timeline */}
-          <motion.div variants={staggerItem} className="glass flex flex-col gap-5 rounded-xl p-6 lg:col-span-1">
-            <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-              repo_timeline — technology evolution
+          <motion.div variants={staggerItem} className="glass flex flex-col gap-5 rounded-xl p-6 lg:col-span-1 relative group">
+            <span className="pointer-events-none absolute -top-px left-1/2 h-px w-1/2 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+            <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+               <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary/60 animate-pulse" />
+              repo_timeline — recent activity
             </h3>
             <motion.ol
               initial="hidden"
@@ -194,10 +202,10 @@ export function Telemetry({ data }: { data: GitHubData }) {
                     hidden: { opacity: 0, x: -12 },
                     show: { opacity: 1, x: 0, transition: { duration: 0.4, ease: easeOut } },
                   }}
-                  className="group/repo relative flex flex-col gap-0.5"
+                  className="group/repo relative flex flex-col gap-0.5 rounded-lg -ml-5 pl-5 py-1.5 pr-2 transition-colors hover:bg-secondary/40"
                 >
                   <span
-                    className="absolute -left-[26px] top-1.5 h-2 w-2 rounded-full bg-primary transition-transform duration-300 group-hover/repo:scale-150 group-hover/repo:shadow-[0_0_10px_2px_oklch(0.77_0.19_155/0.6)]"
+                    className="absolute left-[-4px] top-[14px] h-2 w-2 rounded-full bg-primary transition-transform duration-300 group-hover/repo:scale-150 group-hover/repo:shadow-[0_0_10px_2px_oklch(0.77_0.19_155/0.6)]"
                     aria-hidden="true"
                   />
                   <div className="flex items-baseline justify-between gap-3">
@@ -205,23 +213,19 @@ export function Telemetry({ data }: { data: GitHubData }) {
                       href={repo.htmlUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="cursor-pointer font-mono text-sm text-foreground transition-colors hover:text-primary"
+                      className="cursor-pointer font-mono text-sm text-foreground transition-colors group-hover/repo:text-primary"
                     >
                       {repo.name}
                     </a>
                     <span className="font-mono text-[11px] tabular-nums text-muted-foreground">
-                      {new Date(repo.createdAt).toLocaleDateString('en-GB', {
+                      {new Date(repo.pushedAt).toLocaleDateString('en-GB', {
                         month: 'short',
-                        year: 'numeric',
+                        day: 'numeric'
                       })}
                     </span>
                   </div>
-                  <span className="text-xs text-muted-foreground">
-                    {repo.language ?? 'Polyglot'} · last push{' '}
-                    {new Date(repo.pushedAt).toLocaleDateString('en-GB', {
-                      month: 'short',
-                      year: 'numeric',
-                    })}
+                  <span className="text-xs text-muted-foreground transition-colors group-hover/repo:text-foreground/80">
+                    {repo.language ?? 'Polyglot'}
                   </span>
                 </motion.li>
               ))}

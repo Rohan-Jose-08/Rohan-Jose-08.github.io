@@ -1,12 +1,16 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ChevronDown } from 'lucide-react'
 import { SectionHeading, staggerContainer, staggerItem } from '@/components/motion-primitives'
 import { Badge } from '@/components/ui/badge'
 import { BorderBeam } from '@/components/border-beam'
 import { experience } from '@/lib/portfolio-data'
 
 export function Experience() {
+  const [expanded, setExpanded] = useState<number | null>(null)
+
   return (
     <section id="experience" className="mx-auto max-w-6xl px-6 py-24 md:py-32">
       <SectionHeading
@@ -15,7 +19,15 @@ export function Experience() {
         description="Robotics leadership, aerospace exposure, and hands-on hardware — each one compounding into better software."
       />
         <div className="relative mx-auto mt-12 max-w-3xl">
-          <div className="absolute bottom-0 left-[19px] top-0 w-px bg-gradient-to-b from-transparent via-border to-transparent md:left-1/2 md:-ml-[0.5px]" />
+          {/* Animated timeline line */}
+          <motion.div
+            className="absolute bottom-0 left-[19px] top-0 w-px bg-gradient-to-b from-transparent via-border to-transparent md:left-1/2 md:-ml-[0.5px]"
+            initial={{ scaleY: 0 }}
+            whileInView={{ scaleY: 1 }}
+            viewport={{ once: true, margin: '-20px' }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+            style={{ transformOrigin: 'top' }}
+          />
           
           <motion.div
             variants={staggerContainer}
@@ -26,6 +38,7 @@ export function Experience() {
           >
             {experience.map((item, i) => {
               const isEven = i % 2 === 0
+              const isExpanded = expanded === i
               return (
                 <motion.article
                   key={item.role + item.org}
@@ -48,11 +61,34 @@ export function Experience() {
                     </div>
                   </div>
 
-                  <div className="absolute left-[11px] flex h-4 w-4 items-center justify-center rounded-full border border-primary bg-background shadow-[0_0_10px_2px_oklch(0.77_0.19_155/0.0)] transition-all duration-300 group-hover:scale-125 group-hover:shadow-[0_0_10px_2px_oklch(0.77_0.19_155/0.4)] md:left-1/2 md:-ml-2">
+                  {/* Timeline node with pulse when expanded */}
+                  <motion.div
+                    className="absolute left-[11px] flex h-4 w-4 items-center justify-center rounded-full border border-primary bg-background md:left-1/2 md:-ml-2"
+                    animate={{
+                      boxShadow: isExpanded
+                        ? [
+                            '0 0 0px 0px oklch(0.77 0.19 155 / 0)',
+                            '0 0 12px 4px oklch(0.77 0.19 155 / 0.5)',
+                            '0 0 6px 2px oklch(0.77 0.19 155 / 0.3)',
+                          ]
+                        : '0 0 10px 2px oklch(0.77 0.19 155 / 0.0)',
+                      scale: isExpanded ? 1.3 : 1,
+                    }}
+                    transition={{
+                      boxShadow: isExpanded
+                        ? { duration: 1.5, repeat: Infinity, repeatType: 'reverse' }
+                        : { duration: 0.3 },
+                      scale: { type: 'spring', stiffness: 300, damping: 20 },
+                    }}
+                    whileHover={{ scale: 1.25, boxShadow: '0 0 10px 2px oklch(0.77 0.19 155 / 0.4)' }}
+                  >
                     <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                  </div>
+                  </motion.div>
 
-                  <div className="flex w-full flex-col gap-4 rounded-xl border border-border bg-card p-6 transition-colors duration-300 md:w-1/2 md:p-8 relative overflow-hidden group/card">
+                  <div
+                    className="flex w-full flex-col gap-4 rounded-xl border border-border bg-card p-6 transition-colors duration-300 md:w-1/2 md:p-8 relative overflow-hidden group/card cursor-pointer"
+                    onClick={() => setExpanded(isExpanded ? null : i)}
+                  >
                     <BorderBeam duration={8} size={250} className="opacity-0 transition-opacity duration-300 group-hover/card:opacity-100" />
                     <div className="flex flex-col gap-1 md:hidden">
                       <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">
@@ -67,26 +103,64 @@ export function Experience() {
                     <p className="text-pretty text-sm leading-relaxed text-muted-foreground">
                       {item.summary}
                     </p>
-                    <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
-                      {item.highlights.map((h) => (
-                        <li key={h} className="flex gap-2">
-                          <span className="text-primary" aria-hidden="true">
-                            ▸
-                          </span>
-                          {h}
-                        </li>
-                      ))}
-                    </ul>
+
+                    {/* Collapsed: show first highlight only */}
+                    {!isExpanded && item.highlights.length > 0 && (
+                      <p className="flex gap-2 text-sm text-muted-foreground">
+                        <span className="text-primary" aria-hidden="true">▸</span>
+                        {item.highlights[0]}
+                      </p>
+                    )}
+
+                    {/* Expanded: show all highlights */}
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
+                            {item.highlights.map((h) => (
+                              <li key={h} className="flex gap-2">
+                                <span className="text-primary" aria-hidden="true">
+                                  ▸
+                                </span>
+                                {h}
+                              </li>
+                            ))}
+                          </ul>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
                     <div className="mt-4 flex flex-wrap gap-2">
                       {item.tags.map((t) => (
-                        <Badge
+                        <motion.span
                           key={t}
-                          variant="outline"
-                          className="font-mono text-[10px] uppercase transition-colors duration-200 hover:border-primary/40 hover:text-primary"
+                          whileHover={{ scale: 1.08 }}
+                          transition={{ type: 'spring', stiffness: 400, damping: 15 }}
                         >
-                          {t}
-                        </Badge>
+                          <Badge
+                            variant="outline"
+                            className="press font-mono text-[10px] uppercase transition-colors duration-200 hover:border-primary/40 hover:text-primary"
+                          >
+                            {t}
+                          </Badge>
+                        </motion.span>
                       ))}
+                    </div>
+
+                    {/* Expand indicator */}
+                    <div className="flex justify-center">
+                      <motion.div
+                        animate={{ rotate: isExpanded ? 180 : 0 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                      >
+                        <ChevronDown className="h-4 w-4 text-muted-foreground/40" />
+                      </motion.div>
                     </div>
                   </div>
                 </motion.article>

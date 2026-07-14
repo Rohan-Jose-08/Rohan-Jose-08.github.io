@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import { Command } from 'lucide-react'
 import Magnet from '@/components/Magnet'
 
@@ -99,15 +100,16 @@ export function SiteNav({ onOpenPalette }: { onOpenPalette: () => void }) {
               >
                 <a
                   href={l.href}
-                  className="relative inline-flex items-center text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
+                  className={`relative inline-flex items-center rounded-md px-3 py-1.5 text-sm transition-colors duration-200 ${isActive ? 'text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
                 >
-                  {isActive ? (
-                    <span
-                      aria-hidden="true"
-                      className="absolute -left-3 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-primary shadow-[0_0_10px_2px_var(--ring)]"
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-active-indicator"
+                      className="absolute inset-0 rounded-md bg-primary"
+                      transition={{ type: 'spring', stiffness: 350, damping: 25 }}
                     />
-                  ) : null}
-                  {l.label}
+                  )}
+                  <span className="relative z-10">{l.label}</span>
                 </a>
               </Magnet>
             )

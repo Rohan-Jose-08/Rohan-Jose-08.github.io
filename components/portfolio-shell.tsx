@@ -14,6 +14,7 @@ import { CommandPalette } from '@/components/command-palette'
 import Noise from '@/components/Noise'
 import ClickSpark from '@/components/ClickSpark'
 import { CursorSpotlight } from '@/components/cursor-spotlight'
+import { ScrollToTop } from '@/components/scroll-to-top'
 import type { GitHubData } from '@/lib/github'
 
 export function PortfolioShell({ data }: { data: GitHubData }) {
@@ -43,6 +44,7 @@ export function PortfolioShell({ data }: { data: GitHubData }) {
       </ClickSpark>
       <Noise patternAlpha={5} patternSize={200} patternRefreshInterval={4} />
       <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} repos={data.repos} />
+      <ScrollToTop />
     </>
   )
 }

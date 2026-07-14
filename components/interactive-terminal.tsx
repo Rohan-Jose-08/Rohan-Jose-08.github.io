@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useRef, useEffect, type KeyboardEvent } from 'react'
-import { motion } from 'framer-motion'
-import { FolderGit2, FileText, Terminal } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { FolderGit2, FileText, Terminal, Box } from 'lucide-react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
 type CommandResult = { type: 'system' | 'user' | 'error'; text: string; component?: React.ReactNode }
@@ -13,12 +13,32 @@ const FILE_SYSTEM = {
   'projects/': 'Directory: Contains project deep dives.',
 }
 
+const PROJECTS_LIST = [
+  'rj-os - Operating system kernel (C, Assembly)',
+  'cuda-renderer - GPU Ray tracer (C++)',
+  'portfolio - Interactive portfolio (Next.js, TS)',
+  'neural-sim - AI training pipeline (Python)'
+]
+
+const ASCII_ART = `
+  _____       _                 
+ |  __ \\     | |                
+ | |__) |___ | |__   __ _ _ __  
+ |  _  // _ \\| '_ \\ / _\` | '_ \\ 
+ | | \\ \\ (_) | | | | (_| | | | |
+ |_|  \\_\\___/|_| |_|\\__,_|_| |_|
+`
+
+const ALL_COMMANDS = ['help', 'ls', 'cat', 'whoami', 'clear', 'echo', 'projects', 'theme', 'ascii']
+
 export function InteractiveTerminal() {
   const [history, setHistory] = useState<CommandResult[]>([
     { type: 'system', text: 'rj-os v1.0.0 (tty1)' },
     { type: 'system', text: 'Type "help" for a list of available commands.' }
   ])
   const [input, setInput] = useState('')
+  const [isCrt, setIsCrt] = useState(false)
+  const [flicker, setFlicker] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
 
@@ -26,9 +46,17 @@ export function InteractiveTerminal() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [history])
 
+  const triggerFlicker = () => {
+    if (!isCrt) return
+    setFlicker(true)
+    setTimeout(() => setFlicker(false), 100)
+  }
+
   const handleCommand = (cmd: string) => {
     const trimmed = cmd.trim()
     if (!trimmed) return
+
+    triggerFlicker()
 
     const args = trimmed.split(' ')
     const command = args[0].toLowerCase()
@@ -39,18 +67,45 @@ export function InteractiveTerminal() {
       case 'help':
         result = { 
           type: 'system', 
-          text: 'Available commands:\n  ls       List directory contents\n  cat      Print file content\n  whoami   Print user information\n  clear    Clear terminal output\n  echo     Print text' 
+          text: 'Available commands:\n  ls       List directory contents\n  cat      Print file content\n  whoami   Print user information\n  clear    Clear terminal output\n  projects List featured projects\n  theme    Toggle CRT effect\n  ascii    Print system art' 
         }
         break
       case 'ls':
         result = {
           type: 'system',
           component: (
-            <div className="flex flex-wrap gap-4 text-sm mt-1 mb-2">
-              <span className="text-primary flex items-center gap-1.5"><FolderGit2 className="h-4 w-4" /> projects/</span>
-              <span className="text-foreground flex items-center gap-1.5"><FileText className="h-4 w-4" /> about.txt</span>
-              <span className="text-foreground flex items-center gap-1.5"><FileText className="h-4 w-4" /> contact.txt</span>
-            </div>
+            <motion.div 
+              initial="hidden" 
+              animate="show" 
+              variants={{
+                show: { transition: { staggerChildren: 0.1 } }
+              }}
+              className="flex flex-wrap gap-4 text-sm mt-1 mb-2"
+            >
+              <motion.span variants={{ hidden: { opacity: 0, y: 5 }, show: { opacity: 1, y: 0 } }} className="text-primary flex items-center gap-1.5"><FolderGit2 className="h-4 w-4" /> projects/</motion.span>
+              <motion.span variants={{ hidden: { opacity: 0, y: 5 }, show: { opacity: 1, y: 0 } }} className="text-foreground flex items-center gap-1.5"><FileText className="h-4 w-4" /> about.txt</motion.span>
+              <motion.span variants={{ hidden: { opacity: 0, y: 5 }, show: { opacity: 1, y: 0 } }} className="text-foreground flex items-center gap-1.5"><FileText className="h-4 w-4" /> contact.txt</motion.span>
+            </motion.div>
+          ),
+          text: ''
+        }
+        break
+      case 'projects':
+        result = {
+          type: 'system',
+          component: (
+            <motion.div 
+              initial="hidden" 
+              animate="show" 
+              variants={{ show: { transition: { staggerChildren: 0.1 } } }}
+              className="flex flex-col gap-1 mt-1 mb-2"
+            >
+              {PROJECTS_LIST.map((p, i) => (
+                <motion.span key={i} variants={{ hidden: { opacity: 0, x: -5 }, show: { opacity: 1, x: 0 } }} className="text-foreground flex items-center gap-2">
+                  <Box className="h-3 w-3 text-primary" /> {p}
+                </motion.span>
+              ))}
+            </motion.div>
           ),
           text: ''
         }
@@ -72,6 +127,13 @@ export function InteractiveTerminal() {
       case 'whoami':
         result = { type: 'system', text: 'guest' }
         break
+      case 'theme':
+        setIsCrt(!isCrt)
+        result = { type: 'system', text: `CRT mode ${!isCrt ? 'enabled' : 'disabled'}.` }
+        break
+      case 'ascii':
+        result = { type: 'system', text: ASCII_ART }
+        break
       case 'clear':
         setHistory([])
         return
@@ -89,6 +151,23 @@ export function InteractiveTerminal() {
     if (e.key === 'Enter') {
       handleCommand(input)
       setInput('')
+    } else if (e.key === 'Tab') {
+      e.preventDefault()
+      const args = input.trim().split(' ')
+      if (args.length === 1) {
+        // Autocomplete command
+        const matches = ALL_COMMANDS.filter(cmd => cmd.startsWith(args[0].toLowerCase()))
+        if (matches.length === 1) {
+          setInput(matches[0] + ' ')
+        }
+      } else if (args.length === 2 && args[0].toLowerCase() === 'cat') {
+        // Autocomplete files
+        const files = Object.keys(FILE_SYSTEM)
+        const matches = files.filter(f => f.startsWith(args[1].toLowerCase()))
+        if (matches.length === 1) {
+          setInput(`${args[0]} ${matches[0]}`)
+        }
+      }
     }
   }
 
@@ -97,8 +176,20 @@ export function InteractiveTerminal() {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="w-full max-w-2xl overflow-hidden rounded-xl border border-border bg-[#0d0f17] font-mono text-sm shadow-2xl relative z-20 mx-auto mt-12"
+      className={`w-full max-w-2xl overflow-hidden rounded-xl border border-border bg-[#0d0f17] font-mono text-sm shadow-2xl relative z-20 mx-auto mt-12 transition-all duration-75 ${isCrt ? 'shadow-[0_0_30px_rgba(167,139,250,0.15)] ring-1 ring-primary/20' : ''}`}
     >
+      <AnimatePresence>
+        {flicker && (
+          <motion.div 
+            initial={{ opacity: 0.4 }} 
+            animate={{ opacity: 0 }} 
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.1 }}
+            className="absolute inset-0 bg-white z-50 pointer-events-none" 
+          />
+        )}
+      </AnimatePresence>
+
       <div className="flex items-center gap-2 border-b border-border bg-card px-4 py-2.5">
         <div className="flex gap-1.5">
           <div className="h-3 w-3 rounded-full bg-destructive/80" />
@@ -112,12 +203,22 @@ export function InteractiveTerminal() {
       </div>
       
       <ScrollArea 
-        className="h-[280px] p-5 cursor-text text-left" 
+        className={`h-[280px] p-5 cursor-text text-left relative ${isCrt ? '[text-shadow:0_0_4px_rgba(167,139,250,0.6)]' : ''}`} 
         onClick={() => inputRef.current?.focus()}
       >
+        {isCrt && (
+          <div className="pointer-events-none absolute inset-0 z-50 overflow-hidden rounded-b-xl opacity-10">
+            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%]" />
+          </div>
+        )}
         <div className="flex flex-col gap-2.5">
           {history.map((item, i) => (
-            <div key={i} className="whitespace-pre-wrap leading-relaxed">
+            <motion.div 
+              key={i} 
+              initial={item.type === 'system' ? { opacity: 0, x: -4 } : false}
+              animate={item.type === 'system' ? { opacity: 1, x: 0 } : false}
+              className="whitespace-pre-wrap leading-relaxed"
+            >
               {item.type === 'user' ? (
                 <div>
                   <span className="text-primary mr-2 font-semibold">guest@rj-os:~$</span>
@@ -131,7 +232,7 @@ export function InteractiveTerminal() {
                   {item.component && item.component}
                 </div>
               )}
-            </div>
+            </motion.div>
           ))}
           <div className="flex items-center mt-1">
             <span className="text-primary mr-2 font-semibold shrink-0">guest@rj-os:~$</span>
