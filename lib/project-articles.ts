@@ -3,6 +3,12 @@ export interface ArticleSection {
   paragraphs: string[]
   code?: { language: string; label: string; snippet: string }
   bullets?: string[]
+  media?: {
+    type: 'image' | 'video'
+    src: string
+    alt: string
+    caption?: string
+  }
 }
 
 const supplementalProjectArticles = {
@@ -21,8 +27,8 @@ const supplementalProjectArticles = {
     slug: 'biology-challenge-site', readingTime: '5 min read',
     intro: 'Biology Challenge is an educational web experience that treats the visual identity as part of the interaction. It pairs the structure of a Next.js application with a small animated DNA-and-dinosaur mark that changes when the visitor engages with it.',
     sections: [
-      { heading: 'Motion with a purpose', paragraphs: ['The central mark is an SVG driven by Framer Motion. In its resting state it presents Biology Challenge text and DNA paths; on hover it transitions into a T-Rex silhouette. The animation is declarative: opacity, scale, and path length are variants, rather than ad-hoc DOM manipulation.', 'That makes the interaction easy to reason about and keeps the SVG meaningful: it has a title, image role, and a clear hover affordance. It is a compact example of using motion to make a subject-specific identity memorable.'] },
-      { heading: 'Components before pages', paragraphs: ['The project is organised around App Router pages and reusable components, with profile and home views alongside an explicit theme provider. Radix primitives cover common UI behaviour while Tailwind keeps the visual system close to the markup.', 'This separation keeps presentation concerns from leaking across the site. Page components compose the experience; shared controls own their local accessibility and interaction behaviour.'] },
+      { heading: 'Motion with a purpose', paragraphs: ['The central mark is an SVG driven by Framer Motion. In its resting state it presents Biology Challenge text and DNA paths; on hover it transitions into a T-Rex silhouette. The animation is declarative: opacity, scale, and path length are variants, rather than ad-hoc DOM manipulation.', 'That makes the interaction easy to reason about and keeps the SVG meaningful: it has a title, image role, and a clear hover affordance. It is a compact example of using motion to make a subject-specific identity memorable.'], media: { type: 'image', src: '/images/biologywebsite/biology-website.png', alt: 'Biology Challenge main interface', caption: 'The main interface featuring custom SVG animations' } },
+      { heading: 'Components before pages', paragraphs: ['The project is organised around App Router pages and reusable components, with profile and home views alongside an explicit theme provider. Radix primitives cover common UI behaviour while Tailwind keeps the visual system close to the markup.', 'This separation keeps presentation concerns from leaking across the site. Page components compose the experience; shared controls own their local accessibility and interaction behaviour.'], media: { type: 'image', src: '/images/biologywebsite/aboutus.png', alt: 'About Us section of the Biology Challenge site', caption: 'Component-based architecture enables clean, reusable layouts' } },
       { heading: 'An educational product surface', paragraphs: ['The project demonstrates that educational sites do not need to look static or institutional. Small interactive details can make a topic feel inviting without obscuring content.', 'The main technical lesson is restraint: animation belongs at a clear moment of engagement, while the layout, typography, and theme choices remain dependable everywhere else.'] }
     ],
     lessons: ['SVG path animation is a lightweight way to create a distinctive brand moment', 'Accessible component primitives make custom UI safer to iterate on', 'Motion earns its place when it reinforces the subject and interaction'],
@@ -54,8 +60,8 @@ const supplementalProjectArticles = {
     slug: 'minecraft-mod-prototype', readingTime: '4 min read',
     intro: 'Minecraft Mod Prototype is an early exploration of Java game modding. Its value is in learning the path from a local Gradle project and model asset through to running content inside a large, event-driven game.',
     sections: [
-      { heading: 'Learning the modding toolchain', paragraphs: ['The repository is structured as a Java/Gradle project and includes the development output associated with a Forge-based mod environment. Modding starts with build tooling: dependencies, mappings, launch configurations, and the game runtime must agree before gameplay code can be tested.', 'That initial setup work is not glamorous, but it teaches an important systems lesson: extension development means working inside another application’s lifecycle and conventions.'] },
-      { heading: 'Assets meet runtime code', paragraphs: ['A Blockbench model file is included alongside the Java project. That places the project at the junction of content creation and programming: a visual asset needs to be exported, named, registered, and associated with the right in-game behaviour.', 'The workflow is useful preparation for graphics and game programming because it makes asset pipelines tangible rather than abstract.'] },
+      { heading: 'Learning the modding toolchain', paragraphs: ['The repository is structured as a Java/Gradle project and includes the development output associated with a Forge-based mod environment. Modding starts with build tooling: dependencies, mappings, launch configurations, and the game runtime must agree before gameplay code can be tested.', 'That initial setup work is not glamorous, but it teaches an important systems lesson: extension development means working inside another application’s lifecycle and conventions.'], media: { type: 'image', src: '/images/minecraftmod/minecraft.png', alt: 'Minecraft Mod gameplay prototype', caption: 'Running custom code within the Minecraft Forge environment' } },
+      { heading: 'Assets meet runtime code', paragraphs: ['A Blockbench model file is included alongside the Java project. That places the project at the junction of content creation and programming: a visual asset needs to be exported, named, registered, and associated with the right in-game behaviour.', 'The workflow is useful preparation for graphics and game programming because it makes asset pipelines tangible rather than abstract.'], media: { type: 'image', src: '/images/minecraftmod/mcdim.png', alt: 'Custom Minecraft dimension or biome', caption: 'Integrating visual assets with the game engine’s rendering pipeline' } },
       { heading: 'A focused prototype', paragraphs: ['As a prototype, the project is intentionally a learning environment rather than a production mod. The public repository contains build artefacts as well as source assets, showing the experimentation that accompanies an initial Forge setup.', 'The next step is to distil that learning into a clean distributable mod: source-focused commits, a clear feature description, packaged releases, and a short gameplay demonstration.'] }
     ],
     lessons: ['Game extensions are constrained by the host application lifecycle and API', 'Build tooling is foundational when the runtime is a large Java application', 'Asset conventions are part of the programming interface in game development'],
@@ -85,6 +91,12 @@ const existingProjectArticles: Record<string, ProjectArticle> = {
           'Every abstraction a modern developer relies on — processes, virtual memory, file descriptors, even the humble printf — is a service provided by a kernel. The goal of this project was to earn those abstractions rather than inherit them: to understand exactly what happens between the moment power is applied and the moment a program runs.',
           'The project deliberately avoids existing kernels, bootloader frameworks, and standard libraries. Every byte that executes was either written by hand or emitted by a toolchain configured from scratch with custom linker scripts.',
         ],
+        media: {
+          type: 'video',
+          src: '/images/OSDev/OS-Demo.mp4',
+          alt: 'A demo of the custom operating system booting and running basic commands',
+          caption: 'Booting the custom OS and interacting with the shell in QEMU'
+        }
       },
       {
         heading: 'Stage one: the bootloader',
@@ -120,6 +132,12 @@ init_pm:
           'Hardware interrupts arrive through the 8259 Programmable Interrupt Controller, which powers on with mappings that collide with CPU exceptions. Remapping the PIC so IRQ 0 lands at vector 32 instead of vector 8 is a rite of passage: get it wrong and every timer tick looks like a double fault.',
           'With the IDT and PIC in place, the kernel gained a programmable timer for scheduling ticks and a keyboard driver that translates scancodes into characters — the first moment the OS could actually be interacted with.',
         ],
+        media: {
+          type: 'image',
+          src: '/images/OSDev/kernelshell.png',
+          alt: 'The custom operating system shell',
+          caption: 'Handling keyboard interrupts to power a basic interactive shell'
+        }
       },
       {
         heading: 'Memory management without a safety net',
@@ -175,6 +193,12 @@ init_pm:
           'The client is Flutter, chosen deliberately over separate native apps. A social product lives or dies on iteration speed — the ability to redesign the feed, tweak an interaction, and ship it everywhere the same day. Flutter\u2019s widget model makes the entire UI a pure function of state, which means features are built once and behave identically across 2.5 MB of Dart.',
           'Where the platforms genuinely diverge — push notifications, deep links, media pickers — thin Kotlin and Swift platform channels bridge to native APIs. The rule: native code handles capability, Dart handles behavior. No business logic ever lives in the platform layer.',
         ],
+        media: {
+          type: 'image',
+          src: '/images/pulse/home-screen.png',
+          alt: 'Pulse home screen showing the feed',
+          caption: 'The cross-platform Flutter client rendering a real-time social feed'
+        }
       },
       {
         heading: 'Designing the feed',
@@ -183,6 +207,12 @@ init_pm:
           'Pulse uses a fan-out-on-write model for regular accounts: when a user posts, the post ID is pushed into each follower\u2019s precomputed timeline. Reads become a cheap, indexed lookup. High-follower accounts flip to fan-out-on-read to avoid write amplification, and the two strategies merge at query time.',
           'Pagination is cursor-based rather than offset-based. Offsets break the moment new posts arrive mid-scroll; an opaque cursor anchored to a post ID and timestamp keeps the feed stable no matter how fast content is flowing in.',
         ],
+        media: {
+          type: 'image',
+          src: '/images/pulse/map-page.png',
+          alt: 'Pulse map view showing geotagged posts',
+          caption: 'Geospatial queries integrate with the feed architecture for location-based discovery'
+        },
         code: {
           language: 'typescript',
           label: 'api/feed.ts — cursor-based timeline pagination',
@@ -248,6 +278,12 @@ init_pm:
           'The textbook path tracer is elegantly recursive: a ray hits a surface, the material scatters it, and the function calls itself with the new ray until the ray escapes or runs out of bounces. GPUs hate this. Deep recursion per thread blows out stack memory, and divergent call depths across a warp serialize execution.',
           'The core restructuring was converting recursion into iteration: each thread carries an accumulated attenuation color and loops over bounces, multiplying attenuation at each hit. The math is identical — the memory behavior is completely different.',
         ],
+        media: {
+          type: 'image',
+          src: '/images/raytracer/raytracing.webp',
+          alt: 'A visually impressive render from the GPU ray tracer',
+          caption: 'Path tracing produces physically accurate lighting at extreme compute cost'
+        },
         code: {
           language: 'cuda',
           label: 'render.cu — iterative bounce loop replacing recursion',
@@ -285,6 +321,12 @@ init_pm:
           'The naive port ran barely faster than the CPU. The reason was memory access, not arithmetic: scene data scattered across global memory meant every intersection test paid hundreds of cycles of latency.',
           'Three changes recovered the performance. Scene primitives were packed into contiguous arrays so warp accesses coalesce. The framebuffer became a single accumulation buffer written once per sample rather than read-modify-written per bounce. And host-device transfers were eliminated from the render loop entirely — the image only crosses the PCIe bus once, when it is finished.',
         ],
+        media: {
+          type: 'image',
+          src: '/images/raytracer/cornell.png',
+          alt: 'The Cornell Box rendered by the GPU ray tracer',
+          caption: 'The classic Cornell Box scene, used to verify light transport and global illumination'
+        }
       },
       {
         heading: 'Wrestling with divergence',
@@ -395,6 +437,12 @@ init_pm:
           'The core insight of raycasting is dimensional reduction. A true ray tracer fires a ray per pixel; a raycaster fires one ray per screen column — 320 rays instead of 64,000 — because in a world of vertical walls on a flat floor, everything in a column is determined by a single wall hit.',
           'Each frame walks the screen left to right: compute the ray direction for this column from the player\u2019s facing direction and field of view, march the ray through the map grid until it hits a wall, then use the hit distance to decide how tall the wall should appear. Near walls are tall, far walls are short. That is the whole illusion.',
         ],
+        media: {
+          type: 'image',
+          src: '/images/raycaster/raycaster.png',
+          alt: 'A basic view of the raycasted 3D world',
+          caption: 'Rendering vertical strips of textures based on the ray intersection distance'
+        }
       },
       {
         heading: 'DDA: marching a grid perfectly',
@@ -430,6 +478,12 @@ int line_height = (int)(SCREEN_H / perp_dist);`,
           'The first working build had a bug that is a rite of passage for every raycaster: walls bulged outward like the world was seen through a peephole. The cause is using true Euclidean ray distance for wall height — rays at the edge of the field of view travel farther to reach the same wall plane, so edge columns render shorter.',
           'The fix is projecting the hit distance onto the camera\u2019s viewing direction — the perpendicular distance to the camera plane rather than the distance along the ray. One line of math, and the corridors snap straight. It is a perfect miniature of graphics programming: the bug is geometric, and so is the fix.',
         ],
+        media: {
+          type: 'image',
+          src: '/images/raycaster/scaryenemy.png',
+          alt: 'A textured enemy sprite in the raycasted world',
+          caption: 'Combining perpendicular distance projection with sprite rendering'
+        }
       },
       {
         heading: 'Texturing on a budget',

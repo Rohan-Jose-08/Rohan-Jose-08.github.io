@@ -24,6 +24,40 @@ const LANGUAGE_MAP: Record<string, string> = {
   rust: 'rust',
 }
 
+function MediaBlock({ type, src, alt, caption }: { type: 'image' | 'video'; src: string; alt: string; caption?: string }) {
+  return (
+    <TiltCard maxTilt={1.5} scaleOnHover={1.005} className="my-6">
+      <figure className="group relative overflow-hidden rounded-xl border border-border bg-card/50 transition-colors duration-300 hover:border-primary/30">
+        <BorderBeam duration={8} size={250} className="opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <div className="relative aspect-video w-full overflow-hidden bg-muted/20">
+          {type === 'video' ? (
+            <video
+              src={src}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <img
+              src={src}
+              alt={alt}
+              loading="lazy"
+              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.02]"
+            />
+          )}
+        </div>
+        {caption && (
+          <figcaption className="border-t border-border/50 bg-background/50 px-4 py-3 text-sm text-muted-foreground backdrop-blur-sm">
+            {caption}
+          </figcaption>
+        )}
+      </figure>
+    </TiltCard>
+  )
+}
+
 function CodeBlock({ language, label, snippet }: { language: string; label: string; snippet: string }) {
   const [copied, setCopied] = useState(false)
   const [flash, setFlash] = useState(false)
@@ -298,11 +332,19 @@ export function ProjectArticleView({
                       {section.heading}
                     </h2>
                   </div>
-                  {section.paragraphs.map((p) => (
-                    <p key={p.slice(0, 40)} className="text-pretty leading-relaxed text-muted-foreground">
-                      {p}
-                    </p>
+                  {section.paragraphs.map((p, pIdx) => (
+                    <div key={p.slice(0, 40)} className="flex flex-col gap-5">
+                      <p className="text-pretty leading-relaxed text-muted-foreground">
+                        {p}
+                      </p>
+                      {pIdx === 0 && section.media && (
+                        <MediaBlock {...section.media} />
+                      )}
+                    </div>
                   ))}
+                  {section.paragraphs.length === 0 && section.media && (
+                    <MediaBlock {...section.media} />
+                  )}
                   {section.code ? <CodeBlock {...section.code} /> : null}
                   {section.bullets ? (
                     <ul className="flex flex-col gap-2 text-sm leading-relaxed text-muted-foreground">
