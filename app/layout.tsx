@@ -59,7 +59,6 @@ export const viewport: Viewport = {
 
 import { CrtOverlay } from '@/components/crt-overlay'
 import { TerminalBoot } from '@/components/terminal-boot'
-import { CustomCursor } from '@/components/custom-cursor'
 
 export default function RootLayout({
   children,
@@ -73,7 +72,6 @@ export default function RootLayout({
           aria-hidden="true"
           className="grid-bg grid-bg-drift pointer-events-none fixed inset-0 z-[-1] opacity-30"
         />
-        <CustomCursor />
         <CrtOverlay />
         <TerminalBoot />
         {children}
