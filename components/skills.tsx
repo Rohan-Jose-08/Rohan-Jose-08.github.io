@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { Box, Cpu, Layers3, Network, Server, Sparkles } from 'lucide-react'
 import { SectionHeading, staggerContainer, staggerItem } from '@/components/motion-primitives'
+import { Badge } from '@/components/ui/badge'
 import { skillDomains } from '@/lib/portfolio-data'
 
 const icons = [Cpu, Layers3, Sparkles, Box, Network, Server]
@@ -52,11 +53,10 @@ export function Skills() {
                 </div>
                 <ul className="flex flex-wrap gap-2">
                   {domain.skills.map((s) => (
-                    <li
-                      key={s}
-                      className="rounded-md border border-border bg-secondary px-2.5 py-1 font-mono text-xs text-secondary-foreground transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary"
-                    >
-                      {s}
+                    <li key={s} className="transition-all duration-200 hover:-translate-y-0.5">
+                      <Badge variant="secondary" className="font-mono text-xs hover:border-primary/40 hover:text-primary border border-transparent">
+                        {s}
+                      </Badge>
                     </li>
                   ))}
                 </ul>

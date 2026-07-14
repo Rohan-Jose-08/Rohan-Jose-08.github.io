@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Command } from 'cmdk'
 import {
   Coffee,
@@ -62,36 +63,54 @@ export function CommandPalette({ open, onOpenChange, repos }: CommandPaletteProp
     window.open(url, url.startsWith('mailto') ? '_self' : '_blank', 'noopener,noreferrer')
   }
 
-  if (!open) return null
-
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-start justify-center bg-background/70 px-4 pt-[15vh] backdrop-blur-sm"
-      onClick={() => onOpenChange(false)}
-      role="presentation"
-    >
-      <Command
-        label="Command palette"
-        onClick={(e) => e.stopPropagation()}
-        className="glass w-full max-w-lg overflow-hidden rounded-xl shadow-2xl shadow-black/40"
-      >
-        <div className="flex items-center gap-2 border-b border-border px-4">
-          <span className="font-mono text-sm text-primary" aria-hidden="true">
-            $
-          </span>
-          <Command.Input
-            autoFocus
-            placeholder="Type a command, section, or repository..."
-            className="h-12 w-full bg-transparent font-mono text-sm outline-none placeholder:text-muted-foreground"
-            onValueChange={(v) => {
-              if (v.trim().toLowerCase() === 'sudo') setSudo(true)
-            }}
-          />
-          <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
-            esc
-          </kbd>
-        </div>
-        <Command.List className="max-h-80 overflow-y-auto p-2">
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] flex items-start justify-center bg-background/70 px-4 pt-[15vh] backdrop-blur-sm"
+          onClick={() => onOpenChange(false)}
+          role="presentation"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 10 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="w-full max-w-lg"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Command
+              label="Command palette"
+              className="glass w-full overflow-hidden rounded-xl shadow-2xl shadow-black/40 border border-primary/20"
+            >
+              <div className="flex items-center gap-2 border-b border-border bg-card px-4 py-2">
+                <div className="flex gap-1.5 mr-2">
+                  <div className="h-2.5 w-2.5 rounded-full bg-destructive/80" />
+                  <div className="h-2.5 w-2.5 rounded-full bg-yellow-500/80" />
+                  <div className="h-2.5 w-2.5 rounded-full bg-primary/80" />
+                </div>
+                <span className="font-mono text-xs text-muted-foreground ml-2">rj-os terminal</span>
+              </div>
+              <div className="flex items-center gap-2 border-b border-border px-4">
+                <span className="font-mono text-sm text-primary" aria-hidden="true">
+                  $
+                </span>
+                <Command.Input
+                  autoFocus
+                  placeholder="Type a command, section, or repository..."
+                  className="h-12 w-full bg-transparent font-mono text-sm outline-none placeholder:text-muted-foreground"
+                  onValueChange={(v) => {
+                    if (v.trim().toLowerCase() === 'sudo') setSudo(true)
+                  }}
+                />
+                <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                  esc
+                </kbd>
+              </div>
+              <Command.List className="max-h-80 overflow-y-auto p-2">
           <Command.Empty className="flex items-center gap-2 px-3 py-6 font-mono text-sm text-muted-foreground">
             {sudo ? (
               <>
@@ -181,9 +200,12 @@ export function CommandPalette({ open, onOpenChange, repos }: CommandPaletteProp
               <FileDown className="h-4 w-4 text-primary" aria-hidden="true" />
               Resume
             </Command.Item>
-          </Command.Group>
-        </Command.List>
-      </Command>
-    </div>
+              </Command.Group>
+            </Command.List>
+          </Command>
+        </motion.div>
+      </motion.div>
+      )}
+    </AnimatePresence>
   )
 }

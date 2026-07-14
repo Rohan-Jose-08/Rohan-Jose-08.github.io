@@ -10,6 +10,7 @@ import Magnet from '@/components/Magnet'
 import { CountUp } from '@/components/count-up'
 import { TextScramble } from '@/components/text-scramble'
 import { ShimmerButton } from '@/components/shimmer-button'
+import { InteractiveTerminal } from '@/components/interactive-terminal'
 import type { GitHubData } from '@/lib/github'
 
 const easeOut = [0.16, 1, 0.3, 1] as const
@@ -158,6 +159,8 @@ export function Hero({ data }: { data: GitHubData }) {
             </div>
           ))}
         </motion.dl>
+
+        <InteractiveTerminal />
       </div>
     </section>
   )

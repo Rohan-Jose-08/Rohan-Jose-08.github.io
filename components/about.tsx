@@ -1,6 +1,7 @@
 'use client'
 
 import { Reveal, SectionHeading } from '@/components/motion-primitives'
+import { TextScramble } from '@/components/text-scramble'
 import type { GitHubData } from '@/lib/github'
 
 export function About({ data }: { data: GitHubData }) {
@@ -36,8 +37,15 @@ export function About({ data }: { data: GitHubData }) {
           </p>
         </Reveal>
         <Reveal delay={0.15}>
-          <div className="glass flex flex-col gap-4 rounded-xl p-6 font-mono text-sm">
-            <span className="text-xs uppercase tracking-[0.2em] text-primary">Focus areas</span>
+          <div className="glass flex flex-col gap-4 rounded-xl p-6 font-mono text-sm relative overflow-hidden group">
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-gradient-to-r from-primary/0 via-primary to-primary/0 transition-transform duration-500 group-hover:scale-x-100"
+            />
+            <span className="text-xs uppercase tracking-[0.2em] text-primary flex items-center gap-2">
+              <span className="inline-flex h-2 w-2 rounded-full bg-primary animate-pulse" />
+              <TextScramble text="Focus areas" />
+            </span>
             <ul className="flex flex-col gap-3 text-muted-foreground">
               {[
                 'Systems architecture',

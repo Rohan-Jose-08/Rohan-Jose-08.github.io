@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { SectionHeading, staggerContainer, staggerItem } from '@/components/motion-primitives'
+import { Badge } from '@/components/ui/badge'
 import { experience } from '@/lib/portfolio-data'
 
 export function Experience() {
@@ -62,12 +63,13 @@ export function Experience() {
             </ul>
             <div className="mt-auto flex flex-wrap gap-2 pt-2">
               {item.tags.map((t) => (
-                <span
+                <Badge
                   key={t}
-                  className="rounded-md border border-border bg-secondary px-2 py-0.5 font-mono text-[11px] text-secondary-foreground transition-colors duration-200 hover:border-primary/40 hover:text-primary"
+                  variant="outline"
+                  className="font-mono text-[11px] transition-colors duration-200 hover:border-primary/40 hover:text-primary"
                 >
                   {t}
-                </span>
+                </Badge>
               ))}
             </div>
           </motion.article>

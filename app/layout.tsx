@@ -57,6 +57,9 @@ export const viewport: Viewport = {
   themeColor: '#12151f',
 }
 
+import { CrtOverlay } from '@/components/crt-overlay'
+import { TerminalBoot } from '@/components/terminal-boot'
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -65,6 +68,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`bg-background dark ${inter.variable} ${geistMono.variable}`}>
       <body className="font-sans antialiased">
+        <CrtOverlay />
+        <TerminalBoot />
         {children}
       </body>
     </html>

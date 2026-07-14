@@ -9,6 +9,8 @@ import { Reveal, SectionHeading, staggerContainer, staggerItem } from '@/compone
 import GlareHover from '@/components/GlareHover'
 import StarBorder from '@/components/StarBorder'
 import Magnet from '@/components/Magnet'
+import { Badge } from '@/components/ui/badge'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { featuredProjects, type FeaturedProject } from '@/lib/portfolio-data'
 import type { GitHubRepo } from '@/lib/github'
 
@@ -113,12 +115,9 @@ function ProjectCard({
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap gap-2">
               {project.tech.map((t) => (
-                <span
-                  key={t}
-                  className="rounded-md border border-border bg-secondary px-2.5 py-1 font-mono text-xs text-secondary-foreground"
-                >
+                <Badge key={t} variant="secondary" className="font-mono text-xs">
                   {t}
-                </span>
+                </Badge>
               ))}
             </div>
             {project.metrics ? (
@@ -152,21 +151,19 @@ export function Projects({ repos }: { repos: GitHubRepo[] }) {
         description="Pulled from live GitHub repositories — kernels, renderers, and products, each documented with the hard problems they solve."
       />
       <Reveal className="mb-10 flex flex-wrap gap-2">
-        {categories.map((c) => (
-          <button
-            key={c}
-            type="button"
-            onClick={() => setFilter(c)}
-            aria-pressed={filter === c}
-            className={`cursor-pointer rounded-lg px-4 py-2 text-sm transition-colors duration-200 ${
-              filter === c
-                ? 'bg-primary text-primary-foreground'
-                : 'glass text-muted-foreground hover:text-foreground'
-            }`}
-          >
-            {c}
-          </button>
-        ))}
+        <Tabs value={filter} onValueChange={(v) => setFilter(v as typeof filter)} className="w-full justify-start">
+          <TabsList variant="line" className="bg-card/40 rounded-xl p-1 border border-border flex-wrap h-auto gap-2">
+            {categories.map((c) => (
+              <TabsTrigger
+                key={c}
+                value={c}
+                className="font-mono text-xs px-4 py-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:after:hidden rounded-lg hover:text-foreground"
+              >
+                {c}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
       </Reveal>
       <motion.div
         variants={staggerContainer}
