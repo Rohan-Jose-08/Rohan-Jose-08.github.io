@@ -71,7 +71,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         <div
           aria-hidden="true"
-          className="grid-bg grid-bg-drift pointer-events-none fixed inset-0 z-[-1] opacity-30"
+          className="grid-bg pointer-events-none fixed inset-0 z-[-1] opacity-20"
         />
         <Aurora />
         <CrtOverlay />

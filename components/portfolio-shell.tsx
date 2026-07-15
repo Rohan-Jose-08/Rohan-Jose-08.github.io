@@ -30,8 +30,8 @@ export function PortfolioShell({ data }: { data: GitHubData }) {
       </a>
       <CursorSpotlight />
       <SiteNav onOpenPalette={() => setPaletteOpen(true)} />
-      <ClickSpark sparkColor="#a78bfa" sparkSize={5} sparkRadius={12} sparkCount={4} duration={400}>
-        <main>
+      <ClickSpark sparkColor="#53e38d" sparkSize={4} sparkRadius={10} sparkCount={3} duration={320}>
+        <main className="relative overflow-clip">
           <Hero data={data} />
           <About data={data} />
           <Projects repos={data.repos} />

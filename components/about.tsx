@@ -39,7 +39,7 @@ export function About({ data }: { data: GitHubData }) {
         </Reveal>
         <Reveal delay={0.15} className="h-full">
           <TiltCard as="div" maxTilt={4} scaleOnHover={1.02} className="h-full">
-            <div className="glass flex flex-col gap-4 rounded-xl p-6 font-mono text-sm relative overflow-hidden group h-full">
+            <div className="surface-panel group relative flex h-full flex-col gap-5 overflow-hidden rounded-2xl p-6 font-mono text-sm md:p-8">
               <span
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-gradient-to-r from-primary/0 via-primary to-primary/0 transition-transform duration-500 group-hover:scale-x-100"

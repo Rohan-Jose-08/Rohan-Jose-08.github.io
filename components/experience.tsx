@@ -86,7 +86,7 @@ export function Experience() {
                   </motion.div>
 
                   <div
-                    className="flex w-full flex-col gap-4 rounded-xl border border-border bg-card p-6 transition-colors duration-300 md:w-1/2 md:p-8 relative overflow-hidden group/card cursor-pointer"
+                    className="surface-panel group/card relative flex w-full cursor-pointer flex-col gap-4 overflow-hidden rounded-2xl p-6 transition-colors duration-300 md:w-1/2 md:p-8"
                     onClick={() => setExpanded(isExpanded ? null : i)}
                   >
                     <BorderBeam duration={8} size={250} className="opacity-0 transition-opacity duration-300 group-hover/card:opacity-100" />
