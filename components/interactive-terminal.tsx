@@ -149,6 +149,7 @@ export function InteractiveTerminal() {
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      if (e.nativeEvent.isComposing || e.keyCode === 229) return
       handleCommand(input)
       setInput('')
     } else if (e.key === 'Tab') {

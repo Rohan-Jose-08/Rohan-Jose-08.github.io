@@ -1,9 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
-import { Command } from 'lucide-react'
-import Magnet from '@/components/Magnet'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Command, Menu, X } from 'lucide-react'
 
 const links = [
   { href: '#projects', label: 'Projects' },
@@ -17,6 +16,7 @@ export function SiteNav({ onOpenPalette }: { onOpenPalette: () => void }) {
   const [scrolled, setScrolled] = useState(false)
   const [progress, setProgress] = useState(0)
   const [active, setActive] = useState<string>('')
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     const onScroll = () => {
@@ -32,101 +32,128 @@ export function SiteNav({ onOpenPalette }: { onOpenPalette: () => void }) {
   }, [])
 
   useEffect(() => {
-    const sectionIds = ['#projects', '#telemetry', '#experience', '#skills', '#contact']
-    const elements = sectionIds
-      .map((id) => document.querySelector(id))
-      .filter((el): el is Element => Boolean(el))
+    const elements = links
+      .map(({ href }) => document.querySelector(href))
+      .filter((element): element is Element => Boolean(element))
     if (elements.length === 0) return
 
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
-          .filter((e) => e.isIntersecting)
+          .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-        if (visible) {
-          const id = `#${visible.target.id}`
-          setActive(id)
-        }
+        if (visible) setActive(`#${visible.target.id}`)
       },
-      { rootMargin: '-40% 0px -50% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
+      { rootMargin: '-40% 0px -50% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] },
     )
 
-    elements.forEach((el) => observer.observe(el))
+    elements.forEach((element) => observer.observe(element))
     return () => observer.disconnect()
   }, [])
 
+  const closeMenu = () => setMenuOpen(false)
+
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled ? 'glass' : 'bg-transparent'
-      }`}
-    >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 transition-opacity duration-500"
-        style={{ opacity: scrolled ? 1 : 0 }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute left-0 top-0 h-px origin-left bg-gradient-to-r from-primary/0 via-primary to-primary/0"
-        style={{ transform: `scaleX(${progress})`, transition: 'transform 80ms linear' }}
-      />
+    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
       <nav
         aria-label="Main navigation"
-        className="relative mx-auto flex h-16 max-w-6xl items-center justify-between px-6"
+        className={`relative mx-auto max-w-6xl overflow-hidden rounded-2xl border transition-all duration-300 ${
+          scrolled || menuOpen
+            ? 'border-border bg-background/90 shadow-2xl shadow-background/40 backdrop-blur-xl'
+            : 'border-border/60 bg-background/55 backdrop-blur-md'
+        }`}
       >
-        <a
-          href="#top"
-          className="group inline-flex items-center font-mono text-sm font-semibold tracking-tight"
-        >
-          <span className="text-primary transition-transform duration-300 group-hover:-translate-y-px">
-            rj
-          </span>
-          <span className="text-muted-foreground">@</span>
-          <span>portfolio</span>
-          <span className="ml-1 inline-block h-4 w-2 translate-y-px bg-primary animate-pulse" />
-          <span className="text-primary">:~$</span>
-        </a>
-        <div className="hidden items-center gap-8 md:flex">
-          {links.map((l) => {
-            const isActive = active === l.href
-            return (
-              <Magnet
-                key={l.href}
-                magnetStrength={6}
-                padding={8}
-                activeTransition="transform 0.12s ease-out"
-                inactiveTransition="transform 0.25s ease-in-out"
-              >
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-px origin-left bg-primary"
+          style={{ transform: `scaleX(${progress})`, transition: 'transform 80ms linear' }}
+        />
+        <div className="flex h-14 items-center justify-between px-4 sm:px-5">
+          <a href="#top" onClick={closeMenu} className="group inline-flex min-h-11 items-center gap-3 rounded-lg">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-primary/25 bg-primary/10 font-mono text-xs font-semibold text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+              RJ
+            </span>
+            <span className="hidden flex-col sm:flex">
+              <span className="text-sm font-semibold leading-none">Rohan Jose</span>
+              <span className="mt-1 font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Systems / AI</span>
+            </span>
+          </a>
+
+          <div className="hidden items-center gap-1 lg:flex">
+            {links.map((link) => {
+              const isActive = active === link.href
+              return (
                 <a
-                  href={l.href}
-                  className={`relative inline-flex items-center rounded-md px-3 py-1.5 text-sm transition-colors duration-200 ${isActive ? 'text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                  key={link.href}
+                  href={link.href}
+                  className={`relative inline-flex min-h-11 items-center rounded-lg px-3 text-sm transition-colors ${
+                    isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
+                  }`}
                 >
-                  {isActive && (
+                  {isActive ? (
                     <motion.span
                       layoutId="nav-active-indicator"
-                      className="absolute inset-0 rounded-md bg-primary"
-                      transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                      className="absolute inset-x-3 bottom-1.5 h-px bg-primary"
+                      transition={{ type: 'spring', stiffness: 350, damping: 28 }}
                     />
-                  )}
-                  <span className="relative z-10">{l.label}</span>
+                  ) : null}
+                  {link.label}
                 </a>
-              </Magnet>
-            )
-          })}
+              )
+            })}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onOpenPalette}
+              className="group inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-card/70 px-3 text-xs text-muted-foreground transition-colors hover:border-primary/30 hover:text-foreground"
+              aria-label="Open command palette"
+            >
+              <Command className="h-4 w-4" aria-hidden="true" />
+              <span className="hidden sm:inline">Command</span>
+              <kbd className="hidden rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-primary sm:inline">⌘K</kbd>
+            </button>
+            <button
+              type="button"
+              onClick={() => setMenuOpen((open) => !open)}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-border bg-card/70 text-muted-foreground transition-colors hover:text-foreground lg:hidden"
+              aria-expanded={menuOpen}
+              aria-controls="mobile-navigation"
+              aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            >
+              {menuOpen ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+            </button>
+          </div>
         </div>
-        <button
-          type="button"
-          onClick={onOpenPalette}
-          className="group glass flex cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 text-xs text-muted-foreground transition-all duration-200 hover:text-foreground hover:border-primary/40"
-          aria-label="Open command palette"
-        >
-          <Command className="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-12" aria-hidden="true" />
-          <span className="hidden sm:inline">Command</span>
-          <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] transition-colors group-hover:border-primary/40 group-hover:text-primary">
-            ⌘K
-          </kbd>
-        </button>
+
+        <AnimatePresence initial={false}>
+          {menuOpen ? (
+            <motion.div
+              id="mobile-navigation"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.18 }}
+              className="border-t border-border p-2 lg:hidden"
+            >
+              <div className="grid grid-cols-2 gap-1 sm:grid-cols-5">
+                {links.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={closeMenu}
+                    className={`flex min-h-11 items-center rounded-lg px-3 text-sm transition-colors ${
+                      active === link.href ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    }`}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </nav>
     </header>
   )
