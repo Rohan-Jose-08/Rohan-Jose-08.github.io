@@ -81,22 +81,17 @@
     border: 1px solid oklch(1 0 0 / 8%);
   }
   .text-gradient {
-    background: linear-gradient(120deg, oklch(0.97 0.005 250), oklch(0.77 0.19 155) 60%, oklch(0.8 0.12 195));
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: gradient-shift 4s ease-in-out infinite alternate;
+    color: var(--foreground);
   }
   .text-gradient > * {
-    background: inherit;
-    background-size: inherit;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: inherit;
   }
   .glow-line {
-    background: linear-gradient(90deg, transparent, oklch(0.77 0.19 155 / 50%), transparent);
+    background: oklch(0.77 0.19 155 / 45%);
+  }
+  .case-study-prose {
+    text-wrap: pretty;
+    max-width: 68ch;
   }
 
   /* Tactile press feedback */

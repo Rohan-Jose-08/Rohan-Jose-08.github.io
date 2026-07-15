@@ -13,64 +13,6 @@ export interface ArticleSection {
   media?: MediaItem | MediaItem[]
 }
 
-const supplementalProjectArticles = {
-  'hospital-management-platform': {
-    slug: 'hospital-management-platform', readingTime: '7 min read',
-    intro: 'Hospital Management Platform is a full-stack healthcare workflow project: patients book and manage appointments, doctors work from dedicated views, and administrators oversee the system. The interesting part is the boundary between a pleasant web interface and the disciplined data, access, and notification flows that a healthcare-shaped product demands.',
-    sections: [
-      { heading: 'Designing for distinct roles', paragraphs: ['The product has separate patient, doctor, staff, and administrator surfaces rather than one generic dashboard. That division is reflected in focused routes for clinician appointments and profiles, patient records and results, staff sign-in, and administration.', 'Treating roles as first-class from the start makes the workflow legible. A patient should see booking and records; a clinician should see the schedule and relevant patient work; operational users need management tools. The navigation and server endpoints follow those responsibilities.'], media: { type: 'video', src: '/images/hospitaldatabase/2025-07-13 21-59-32.mp4', alt: 'Hospital Management Platform demonstration', caption: 'Role-based interfaces for patients, clinicians, and administrators' } },
-      { heading: 'A relational model for real workflows', paragraphs: ['Prisma connects the application to PostgreSQL. The schema models doctors and patients alongside appointments, services, contact data, availability, preferences, statistics, and test results. These are relationships, not a single profile blob, so the application can query the views each workflow actually needs.', 'Migrations show the model evolving with the product: appointment notes, duration and priority, doctor contact data, two-factor fields, staff access, and test results. That history is useful engineering evidence — the data model has been refined as features required it.'] },
-      { heading: 'Authentication and communication', paragraphs: ['The application includes password-based sign-in, JSON Web Tokens, bcrypt, authenticator-style two-factor flows, and optional SMS verification. These mechanisms are supported by dedicated API routes rather than being folded into one catch-all handler.', 'Appointments are more useful when the system can follow up, so the project also includes reminder endpoints and email/SMS integrations. PDF test-result download routes complete the loop: the platform stores structured records but can also deliver a document-shaped result to the patient.'] }
-    ],
-    lessons: ['Role boundaries should shape routes, data access, and UI — not just navigation labels', 'Schema migrations are part of the product story, especially when workflows evolve', 'Authentication is a system of focused flows, not a single login form'],
-    future: ['Add auditable permission checks around every record access', 'Introduce automated integration tests for role-sensitive routes', 'Expand deployment configuration for production notification providers'],
-  },
-  'biology-challenge-site': {
-    slug: 'biology-challenge-site', readingTime: '5 min read',
-    intro: 'Biology Challenge is an educational web experience that treats the visual identity as part of the interaction. It pairs the structure of a Next.js application with a small animated DNA-and-dinosaur mark that changes when the visitor engages with it.',
-    sections: [
-      { heading: 'Motion with a purpose', paragraphs: ['The central mark is an SVG driven by Framer Motion. In its resting state it presents Biology Challenge text and DNA paths; on hover it transitions into a T-Rex silhouette. The animation is declarative: opacity, scale, and path length are variants, rather than ad-hoc DOM manipulation.', 'That makes the interaction easy to reason about and keeps the SVG meaningful: it has a title, image role, and a clear hover affordance. It is a compact example of using motion to make a subject-specific identity memorable.'], media: { type: 'image', src: '/images/biologywebsite/biology-website.png', alt: 'Biology Challenge main interface', caption: 'The main interface featuring custom SVG animations' } },
-      { heading: 'Components before pages', paragraphs: ['The project is organised around App Router pages and reusable components, with profile and home views alongside an explicit theme provider. Radix primitives cover common UI behaviour while Tailwind keeps the visual system close to the markup.', 'This separation keeps presentation concerns from leaking across the site. Page components compose the experience; shared controls own their local accessibility and interaction behaviour.'], media: { type: 'image', src: '/images/biologywebsite/aboutus.png', alt: 'About Us section of the Biology Challenge site', caption: 'Component-based architecture enables clean, reusable layouts' } },
-      { heading: 'An educational product surface', paragraphs: ['The project demonstrates that educational sites do not need to look static or institutional. Small interactive details can make a topic feel inviting without obscuring content.', 'The main technical lesson is restraint: animation belongs at a clear moment of engagement, while the layout, typography, and theme choices remain dependable everywhere else.'] }
-    ],
-    lessons: ['SVG path animation is a lightweight way to create a distinctive brand moment', 'Accessible component primitives make custom UI safer to iterate on', 'Motion earns its place when it reinforces the subject and interaction'],
-    future: ['Add interactive biology challenge content and progress tracking', 'Create reduced-motion variants for every animation', 'Deploy content from a structured authoring source'],
-  },
-  'pico-drone-controller': {
-    slug: 'pico-drone-controller', readingTime: '6 min read',
-    intro: 'This project is embedded control software for a drone: it receives pilot intent over radio, reads orientation from an IMU, and closes the loop with independent PID controllers for roll, pitch, and yaw.',
-    sections: [
-      { heading: 'From sensor values to attitude', paragraphs: ['The firmware initialises a BNO055 IMU over its bus interface, switches it into NDOF operation, and reads Euler heading, roll, and pitch values. Calibration status is queried during startup so the control system has a defined sensor bring-up path.', 'The resulting orientation readings become the process inputs for the three controllers. This is the core feedback loop: measure the current attitude, compare it with the desired attitude, and compute a correction.'] },
-      { heading: 'Three coupled control loops', paragraphs: ['Separate PID instances are configured for roll, pitch, and yaw, with independent gains and setpoints. The controller implementation tracks integral accumulation, derivative-on-input, sampling time, and output clamping — the practical pieces that turn the textbook equation into a reusable embedded component.', 'The main loop receives joystick throttle and axis values through an NRF24L01 radio link, converts the orientation data, updates the PIDs, and packages the computed control output. The system repeats on a short delay, creating a simple predictable control cadence.'] },
-      { heading: 'Embedded integration', paragraphs: ['The project brings together the Pico SDK, radio module, IMU driver, UART, and controller code through CMake. Each external component has a focused role, which keeps the control path readable despite the hardware interfaces involved.', 'This is also a reminder that flight control is as much integration work as control theory: pin choices, device initialisation, radio availability, calibration, timing, and output limits all need deliberate handling before tuning can even begin.'], media: { type: 'image', src: '/images/robotics/vex.jpg', alt: 'Embedded hardware and robotics components', caption: 'Integrating IMU sensors, radio modules, and controllers' } }
-    ],
-    lessons: ['A PID loop is only as reliable as its sensor and timing assumptions', 'Independent axes make a first controller easier to tune and inspect', 'Hardware bring-up and failure handling are first-class embedded software work'],
-    future: ['Connect PID output to a tested PWM motor-mixing stage', 'Log telemetry for gain tuning and post-flight analysis', 'Add safe arming, failsafe, and radio-loss behaviour'],
-  },
-  'networked-mastermind': {
-    slug: 'networked-mastermind', readingTime: '6 min read',
-    intro: 'Networked Mastermind takes the familiar code-breaking game and makes the hidden-code relationship literal: one player creates the code, another tries to break it, and the game coordinates both roles over the network.',
-    sections: [
-      { heading: 'The board as a state machine', paragraphs: ['The game controller walks the current row, checks that every slot is filled, then unlocks the next row only after a valid attempt. It captures the player colours, compares them with the code, and writes coloured validation pegs before either continuing or ending the game.', 'A correct position is marked directly; a colour that appears elsewhere in the code receives a secondary hint. The controller also enforces the finite attempt count, so transitions to win and loss rooms are consequences of the same board state rather than separate UI shortcuts.'], media: { type: 'video', src: '/images/mastermind/2025-01-27 22-23-07.mp4', alt: 'Networked Mastermind gameplay demo', caption: 'The board acts as a state machine enforcing valid moves and game rules' } },
-      { heading: 'Maker, breaker, and messages', paragraphs: ['The project contains maker and breaker rooms, controller objects for client and server behaviour, and a MultiClient extension. Role messages select the appropriate room; win and loss messages are sent as UDP packets so both participants can converge on the outcome.', 'The networking scope is deliberately narrow. Instead of synchronising every rendering detail, it moves the game facts that matter: role, guess outcome, and terminal state. That is a sensible trade-off for a turn-based student game.'] },
-      { heading: 'A complete game presentation', paragraphs: ['The repository includes custom sprites, audio, UI objects, rooms, validation pegs, text input, and save/load controls. Those assets turn the rules engine into a complete playable submission rather than a console proof of concept.', 'GameMaker is well suited to this scale of project: the object/event structure makes interaction direct, while scripts hold reusable networking and helper behaviour.'] }
-    ],
-    lessons: ['Explicit state transitions prevent game-rule edge cases from becoming UI bugs', 'Turn-based networking benefits from sending facts, not every frame', 'Polish assets and persistence are part of delivering a complete game'],
-    future: ['Harden the scoring logic against duplicate-colour edge cases', 'Add a lobby and reconnect flow', 'Package a reproducible build and gameplay walkthrough'],
-  },
-  'minecraft-mod-prototype': {
-    slug: 'minecraft-mod-prototype', readingTime: '4 min read',
-    intro: 'Minecraft Mod Prototype is an early exploration of Java game modding. Its value is in learning the path from a local Gradle project and model asset through to running content inside a large, event-driven game.',
-    sections: [
-      { heading: 'Learning the modding toolchain', paragraphs: ['The repository is structured as a Java/Gradle project and includes the development output associated with a Forge-based mod environment. Modding starts with build tooling: dependencies, mappings, launch configurations, and the game runtime must agree before gameplay code can be tested.', 'That initial setup work is not glamorous, but it teaches an important systems lesson: extension development means working inside another application’s lifecycle and conventions.'], media: { type: 'image', src: '/images/minecraftmod/minecraft.png', alt: 'Minecraft Mod gameplay prototype', caption: 'Running custom code within the Minecraft Forge environment' } },
-      { heading: 'Assets meet runtime code', paragraphs: ['A Blockbench model file is included alongside the Java project. That places the project at the junction of content creation and programming: a visual asset needs to be exported, named, registered, and associated with the right in-game behaviour.', 'The workflow is useful preparation for graphics and game programming because it makes asset pipelines tangible rather than abstract.'], media: { type: 'image', src: '/images/minecraftmod/mcdim.png', alt: 'Custom Minecraft dimension or biome', caption: 'Integrating visual assets with the game engine’s rendering pipeline' } },
-      { heading: 'A focused prototype', paragraphs: ['As a prototype, the project is intentionally a learning environment rather than a production mod. The public repository contains build artefacts as well as source assets, showing the experimentation that accompanies an initial Forge setup.', 'The next step is to distil that learning into a clean distributable mod: source-focused commits, a clear feature description, packaged releases, and a short gameplay demonstration.'] }
-    ],
-    lessons: ['Game extensions are constrained by the host application lifecycle and API', 'Build tooling is foundational when the runtime is a large Java application', 'Asset conventions are part of the programming interface in game development'],
-    future: ['Extract a clean source-only module from generated build output', 'Document the content and registration flow', 'Publish a playable release with screenshots or video'],
-  },
-}
-
 export interface ProjectArticle {
   slug: string
   readingTime: string
@@ -80,545 +22,155 @@ export interface ProjectArticle {
   future: string[]
 }
 
-const existingProjectArticles: Record<string, ProjectArticle> = {
+export const projectArticles: Record<string, ProjectArticle> = {
   'os-kernel': {
     slug: 'os-kernel',
-    readingTime: '9 min read',
-    intro:
-      'Most programmers spend their careers standing on top of an operating system without ever looking underneath it. This project removes the floor entirely: a kernel written from scratch in C and x86 Assembly, booting on bare metal with no Linux, no libc, and no runtime — just the CPU, the firmware handoff, and 1.2 MB of hand-written systems code.',
+    readingTime: '10 min read',
+    intro: 'MyOS is a hobbyist i386 multiboot operating system whose public repository contains the kernel, a custom C library, GUI support, user applications, build scripts, disk images, and ISO packaging. The project is best understood as a complete workspace: hardware-facing kernel code and user-facing programs are developed together and staged into one bootable system.',
     sections: [
       {
-        heading: 'Why build an OS from scratch',
-        paragraphs: [
-          'Every abstraction a modern developer relies on — processes, virtual memory, file descriptors, even the humble printf — is a service provided by a kernel. The goal of this project was to earn those abstractions rather than inherit them: to understand exactly what happens between the moment power is applied and the moment a program runs.',
-          'The project deliberately avoids existing kernels, bootloader frameworks, and standard libraries. Every byte that executes was either written by hand or emitted by a toolchain configured from scratch with custom linker scripts.',
-        ],
-        media: [{
-          type: 'video',
-          src: '/images/OSDev/OS-Demo.mp4',
-          alt: 'A demo of the custom operating system booting and running basic commands',
-          caption: 'Booting the custom OS and interacting with the shell in QEMU'
-        }]
+        heading: 'A monolithic i386 kernel',
+        paragraphs: ['The architecture-specific kernel tree contains boot and context-switch assembly alongside C implementations for the GDT, interrupts, exceptions, paging, timers, keyboard and mouse input, ATA storage, AC97 audio, graphics, and system calls. The source layout makes the machine boundary explicit: assembly handles transitions that depend on processor state, while C owns most services and drivers.', 'The kernel is monolithic rather than microkernel-based. Device support, filesystems, graphics, the desktop, and process-facing services live in one address space. For a learning OS, that keeps control flow traceable while still exposing the dependencies between subsystems.'],
+        media: { type: 'video', src: '/images/OSDev/OS-Demo.mp4', alt: 'MyOS booting and running its graphical environment', caption: 'The repository builds a bootable i386 system for QEMU.' },
       },
       {
-        heading: 'Stage one: the bootloader',
-        paragraphs: [
-          'An x86 machine wakes up in 16-bit real mode, pretending it is 1978. The BIOS loads exactly 512 bytes — the boot sector — and jumps to it. Those 512 bytes have to do a remarkable amount of work: load the rest of the kernel from disk, enable the A20 line to unlock memory above 1 MB, install a Global Descriptor Table, and flip the CPU into 32-bit protected mode.',
-          'The trickiest part is that the transition is one-way and unforgiving. A single wrong bit in a GDT descriptor triple-faults the CPU and silently reboots the machine — there is no debugger, no stack trace, no error message. Development iterated through QEMU with GDB attached to the emulated CPU, single-stepping through the mode switch instruction by instruction.',
-        ],
-        media: {
-          type: 'image',
-          src: '/images/OSDev/kernelpanic.png',
-          alt: 'A kernel panic screen from the custom OS',
-          caption: 'A triple-fault or unhandled exception results in a kernel panic — the only feedback when the bootloader goes wrong'
-        },
-        code: {
-          language: 'asm',
-          label: 'boot/switch_pm.asm — the point of no return',
-          snippet: `switch_to_pm:
-    cli                     ; interrupts off until IDT exists
-    lgdt [gdt_descriptor]   ; load the GDT
-    mov eax, cr0
-    or  eax, 0x1            ; set PE bit
-    mov cr0, eax
-    jmp CODE_SEG:init_pm    ; far jump flushes the pipeline
-
-[bits 32]
-init_pm:
-    mov ax, DATA_SEG        ; reload every segment register
-    mov ds, ax
-    mov ss, ax
-    mov ebp, 0x90000        ; fresh stack in high memory
-    mov esp, ebp
-    call BEGIN_PM`,
-        },
+        heading: 'Paging, interrupts, and user mode',
+        paragraphs: ['The i386 directory includes dedicated paging, IRQ, exception, syscall, context-switch, and user-mode entry code. Those files show that the project goes beyond printing to a framebuffer: it establishes the processor tables and transitions needed for protected execution and interrupt-driven hardware.', 'These boundaries are difficult because failure often happens below ordinary debugging tools. Keeping low-level transitions in focused files, and pairing them with C-side handlers, makes register conventions and ownership easier to inspect.'],
+        bullets: ['GDT setup and flush routines', 'PIC/IRQ and exception entry stubs', 'Paging and user-mode transition assembly', 'Timer, keyboard, mouse, storage, audio, and display drivers'],
       },
       {
-        heading: 'Interrupts: teaching the CPU to listen',
-        paragraphs: [
-          'A kernel without interrupts is a program that cannot hear. The Interrupt Descriptor Table maps all 256 interrupt vectors to handlers — the first 32 are CPU exceptions (divide-by-zero, page fault, general protection fault), and the rest are available for hardware IRQs and software interrupts.',
-          'Hardware interrupts arrive through the 8259 Programmable Interrupt Controller, which powers on with mappings that collide with CPU exceptions. Remapping the PIC so IRQ 0 lands at vector 32 instead of vector 8 is a rite of passage: get it wrong and every timer tick looks like a double fault.',
-          'With the IDT and PIC in place, the kernel gained a programmable timer for scheduling ticks and a keyboard driver that translates scancodes into characters — the first moment the OS could actually be interacted with.',
-        ],
-        media: [
-          {
-            type: 'image',
-            src: '/images/OSDev/kernelshell.png',
-            alt: 'The custom operating system shell',
-            caption: 'Handling keyboard interrupts to power a basic interactive shell'
-          },
-          {
-            type: 'image',
-            src: '/images/OSDev/scheduler-design.png',
-            alt: 'Diagram of the OS scheduler design',
-            caption: 'The PIT-driven scheduler design that enables preemptive multitasking'
-          }
-        ]
+        heading: 'A custom userland and graphics stack',
+        paragraphs: ['The workspace also contains a custom libc, libgui, and a user directory with command-line and graphical applications. The build embeds selected user binaries as blobs and stages shared headers and libraries through a sysroot.', 'This changes the engineering problem from “write a kernel feature” to “design an interface that another program can consume.” Shell commands, editors, games, paint tools, a mixer, and desktop modules exercise those interfaces and reveal where kernel APIs are incomplete.'],
+        media: [{ type: 'image', src: '/images/OSDev/kernelshell.png', alt: 'MyOS command shell', caption: 'A custom shell exercises keyboard, terminal, and filesystem services.' }, { type: 'image', src: '/images/OSDev/snake-game.png', alt: 'Snake running in MyOS', caption: 'Bundled applications run against the project’s own runtime and GUI layers.' }],
       },
       {
-        heading: 'Memory management without a safety net',
-        paragraphs: [
-          'There is no malloc on bare metal until you write one. The kernel implements its own physical memory manager: it parses the memory map handed over at boot, marks reserved regions, and hands out page-aligned frames from a free list.',
-          'On top of that sits a simple heap allocator for kernel data structures. Writing an allocator while simultaneously being the only user of that allocator teaches a brutal lesson in bootstrapping: the allocator\u2019s own bookkeeping must be placed in memory that was reserved before the allocator existed.',
-        ],
-        media: [{
-          type: 'image',
-          src: '/images/OSDev/snake-game.png',
-          alt: 'Snake game running on the custom OS',
-          caption: 'Memory allocations dynamically power userspace programs like this Snake game'
-        }],
-        code: {
-          language: 'c',
-          label: 'kernel/mem.c — page-aligned kernel allocation',
-          snippet: `uint32_t kmalloc_internal(uint32_t size, int align, uint32_t *phys) {
-    if (align && (free_mem_addr & 0xFFF)) {
-        /* Round up to the next 4 KB page boundary */
-        free_mem_addr = (free_mem_addr & 0xFFFFF000) + 0x1000;
-    }
-    if (phys) *phys = free_mem_addr;
-    uint32_t ret = free_mem_addr;
-    free_mem_addr += size;
-    return ret;
-}`,
-        },
-      },
-      {
-        heading: 'The build system is part of the kernel',
-        paragraphs: [
-          'A freestanding kernel cannot be linked like a normal program. The Makefile drives a cross-compilation pipeline: NASM assembles the boot code, GCC compiles C with -ffreestanding and no standard includes, and a custom linker script places the kernel at exactly the physical address the bootloader loads it to.',
-          'The linker script is where many OS projects quietly die. If the entry point is not at the expected offset, or if the sections are ordered so that early boot code references data that has not been loaded yet, the machine simply resets. Making the memory layout explicit and deterministic was as important as any line of C.',
-        ],
-        media: [{
-          type: 'image',
-          src: '/images/OSDev/architecture.png',
-          alt: 'Diagram showing the OS build system and architecture',
-          caption: 'High-level view of the custom toolchain, cross-compiler, and kernel linker script'
-        }]
+        heading: 'The build is part of the system',
+        paragraphs: ['Shell scripts and Makefiles coordinate an i686-elf cross-toolchain, build headers and projects into sysroot, create a GRUB-compatible ISO, and launch QEMU with configurable graphics, audio, disk, and networking options. The linker script and generated user-blob list determine what is placed into the kernel image.', 'That reproducible path matters as much as an individual driver. A low-level project is only useful when the source can be transformed into boot media with a known memory layout and tested repeatedly in an emulator.'],
+        media: { type: 'image', src: '/images/OSDev/architecture.png', alt: 'MyOS architecture and build flow', caption: 'Kernel, libraries, and user programs are staged before ISO packaging.' },
       },
     ],
-    lessons: [
-      'Debugging without an OS means building observability first — serial port logging was written before almost anything else',
-      'The x86 architecture is an archaeology dig: every layer of backwards compatibility must be understood to be escaped',
-      'Toolchains are not magic — linker scripts, object formats, and calling conventions are all negotiable once you own the whole stack',
-      'Triple faults are a feature: the CPU resetting on unrecoverable errors forces genuinely defensive design',
-    ],
-    future: [
-      'Virtual memory with full paging and per-process address spaces',
-      'A pre-emptive scheduler driven by the PIT timer',
-      'A minimal filesystem and userspace ELF loader',
-    ],
+    lessons: ['Low-level boundaries become manageable when assembly transitions and C handlers have clear responsibilities', 'A custom libc and userland force kernel interfaces to serve real callers', 'Build scripts, linker layout, and emulator configuration are core operating-system code'],
+    future: ['Document subsystem contracts and boot invariants beside the source', 'Add repeatable emulator tests for syscalls, paging, and filesystems', 'Separate generated disk and ISO artifacts from source-focused history'],
   },
-
   'pulse-social-platform': {
     slug: 'pulse-social-platform',
-    readingTime: '8 min read',
-    intro:
-      'Pulse is a full social platform — feeds, profiles, posting, and real-time interactions — built as a single product across iOS, Android, and web. The interesting engineering is not any one feature but the coordination problem: a Flutter client, a TypeScript API, and Python services all evolving together without breaking each other.',
-    sections: [
-      {
-        heading: 'One codebase, every platform',
-        paragraphs: [
-          'The client is Flutter, chosen deliberately over separate native apps. A social product lives or dies on iteration speed — the ability to redesign the feed, tweak an interaction, and ship it everywhere the same day. Flutter\u2019s widget model makes the entire UI a pure function of state, which means features are built once and behave identically across 2.5 MB of Dart.',
-          'Where the platforms genuinely diverge — push notifications, deep links, media pickers — thin Kotlin and Swift platform channels bridge to native APIs. The rule: native code handles capability, Dart handles behavior. No business logic ever lives in the platform layer.',
-        ],
-        media: {
-          type: 'image',
-          src: '/images/pulse/home-screen.png',
-          alt: 'Pulse home screen showing the feed',
-          caption: 'The cross-platform Flutter client rendering a real-time social feed'
-        }
-      },
-      {
-        heading: 'Designing the feed',
-        paragraphs: [
-          'A feed looks trivial and is not. The naive approach — query every followed user\u2019s posts and sort at read time — collapses as the social graph grows, because read cost scales with follow count on every single refresh.',
-          'Pulse uses a fan-out-on-write model for regular accounts: when a user posts, the post ID is pushed into each follower\u2019s precomputed timeline. Reads become a cheap, indexed lookup. High-follower accounts flip to fan-out-on-read to avoid write amplification, and the two strategies merge at query time.',
-          'Pagination is cursor-based rather than offset-based. Offsets break the moment new posts arrive mid-scroll; an opaque cursor anchored to a post ID and timestamp keeps the feed stable no matter how fast content is flowing in.',
-        ],
-        media: {
-          type: 'image',
-          src: '/images/pulse/map-page.png',
-          alt: 'Pulse map view showing geotagged posts',
-          caption: 'Geospatial queries integrate with the feed architecture for location-based discovery'
-        },
-        code: {
-          language: 'typescript',
-          label: 'api/feed.ts — cursor-based timeline pagination',
-          snippet: `export async function getTimeline(userId: string, cursor?: string) {
-  const anchor = cursor ? decodeCursor(cursor) : null
-
-  const entries = await db.timeline.findMany({
-    where: {
-      ownerId: userId,
-      ...(anchor && { createdAt: { lt: anchor.createdAt } }),
-    },
-    orderBy: { createdAt: 'desc' },
-    take: PAGE_SIZE + 1, // fetch one extra to detect the next page
-    include: { post: { include: { author: true, stats: true } } },
-  })
-
-  const hasMore = entries.length > PAGE_SIZE
-  const page = hasMore ? entries.slice(0, PAGE_SIZE) : entries
-  return {
-    posts: page.map((e) => e.post),
-    nextCursor: hasMore ? encodeCursor(page[page.length - 1]) : null,
-  }
-}`,
-        },
-      },
-      {
-        heading: 'A polyglot backend, on purpose',
-        paragraphs: [
-          'The API layer is TypeScript — request validation, auth, and the data contracts the client depends on. Python workers handle the asynchronous heavy lifting: media processing, feed fan-out jobs, and notification dispatch. The two halves communicate through a job queue, never directly.',
-          'This split forces a discipline that ended up being the project\u2019s biggest architectural win: every boundary is a serialized, versioned message. The Flutter client, the TypeScript API, and the Python workers can each be rewritten independently as long as the contracts hold.',
-        ],
-      },
-      {
-        heading: 'Real-time without meltdown',
-        paragraphs: [
-          'Likes, replies, and presence flow over WebSockets, but the system is designed so that real-time is an enhancement, not a dependency. Every real-time update has a pull-based fallback; if the socket drops, the client reconciles state on reconnect by re-fetching anything newer than its last known cursor.',
-          'Optimistic UI makes interactions feel instant: a like is rendered immediately, tagged with a client-generated ID, and reconciled when the server acknowledges. Rollback on failure is rare but handled — the UI subtracts the phantom like rather than lying to the user.',
-        ],
-        media: {
-          type: 'video',
-          src: '/images/pulse/PulseDemo.mp4',
-          alt: 'Pulse app demo showing real-time interactions',
-          caption: 'Real-time WebSocket integrations paired with optimistic UI updates'
-        }
-      },
-    ],
-    lessons: [
-      'Contracts between services matter more than the services themselves — versioned schemas prevented every cross-language integration fire',
-      'Fan-out strategy is the defining scalability decision of any social product, and it must be chosen before the first post is written',
-      'Optimistic UI with reconciliation delivers perceived speed that no backend optimization can match',
-      'Flutter platform channels should carry capability, never logic',
-    ],
-    future: [
-      'End-to-end encrypted direct messages',
-      'A ranking model layered on top of the chronological feed',
-      'Self-serve moderation tooling backed by the Python worker fleet',
-    ],
-  },
-
-  'gpu-ray-tracer': {
-    slug: 'gpu-ray-tracer',
     readingTime: '9 min read',
-    intro:
-      'A physically-based path tracer produces beautiful images and burns absurd amounts of compute doing it — every pixel needs hundreds of rays, and every ray needs intersection tests, material scattering, and recursive bounces. This project takes a CPU path tracer and rebuilds it as CUDA kernels, turning an hours-long render into seconds by spreading the work across thousands of GPU threads.',
+    intro: 'Pulse combines a Flutter client with a TypeScript/Firebase backend and a separate Python recommendation service. The repository documents product flows for posts, profiles, messages, invitations, highlights, settings, location discovery, and recommendations rather than a single isolated demo.',
     sections: [
-      {
-        heading: 'The problem with recursion on a GPU',
-        paragraphs: [
-          'The textbook path tracer is elegantly recursive: a ray hits a surface, the material scatters it, and the function calls itself with the new ray until the ray escapes or runs out of bounces. GPUs hate this. Deep recursion per thread blows out stack memory, and divergent call depths across a warp serialize execution.',
-          'The core restructuring was converting recursion into iteration: each thread carries an accumulated attenuation color and loops over bounces, multiplying attenuation at each hit. The math is identical — the memory behavior is completely different.',
-        ],
-        media: {
-          type: 'image',
-          src: '/images/raytracer/raytracing.webp',
-          alt: 'A visually impressive render from the GPU ray tracer',
-          caption: 'Path tracing produces physically accurate lighting at extreme compute cost'
-        },
-        code: {
-          language: 'cuda',
-          label: 'render.cu — iterative bounce loop replacing recursion',
-          snippet: `__device__ vec3 ray_color(ray r, hittable **world, curandState *rs) {
-    vec3 attenuation(1.0f, 1.0f, 1.0f);
-    for (int depth = 0; depth < MAX_BOUNCES; depth++) {
-        hit_record rec;
-        if ((*world)->hit(r, 0.001f, FLT_MAX, rec)) {
-            ray scattered;
-            vec3 albedo;
-            if (rec.mat->scatter(r, rec, albedo, scattered, rs)) {
-                attenuation = attenuation * albedo;
-                r = scattered;          // continue the loop, not the stack
-            } else {
-                return vec3(0, 0, 0);   // absorbed
-            }
-        } else {
-            return attenuation * sky_color(r);
-        }
-    }
-    return vec3(0, 0, 0);               // bounce budget exhausted
-}`,
-        },
-      },
-      {
-        heading: 'Randomness at 100,000 threads',
-        paragraphs: [
-          'Path tracing is Monte Carlo integration — it needs high-quality random numbers for every scatter decision, and it needs them independently in every thread. Sharing a random state would serialize threads; correlated sequences would produce visible artifacts in the render.',
-          'The solution is cuRAND with one state per pixel, seeded by pixel index in a dedicated initialization kernel. It costs a few megabytes of device memory and buys perfectly independent sampling across the entire frame.',
-        ],
-      },
-      {
-        heading: 'Memory is the real bottleneck',
-        paragraphs: [
-          'The naive port ran barely faster than the CPU. The reason was memory access, not arithmetic: scene data scattered across global memory meant every intersection test paid hundreds of cycles of latency.',
-          'Three changes recovered the performance. Scene primitives were packed into contiguous arrays so warp accesses coalesce. The framebuffer became a single accumulation buffer written once per sample rather than read-modify-written per bounce. And host-device transfers were eliminated from the render loop entirely — the image only crosses the PCIe bus once, when it is finished.',
-        ],
-        media: {
-          type: 'image',
-          src: '/images/raytracer/cornell.png',
-          alt: 'The Cornell Box rendered by the GPU ray tracer',
-          caption: 'The classic Cornell Box scene, used to verify light transport and global illumination'
-        }
-      },
-      {
-        heading: 'Wrestling with divergence',
-        paragraphs: [
-          'GPU threads execute in warps of 32, and when threads in a warp take different branches, both paths execute serially. A path tracer is a divergence machine: within one warp, some rays hit metal, some hit glass, some hit nothing at all.',
-          'Divergence cannot be eliminated, but it can be contained. Material scatter functions were flattened into a single dispatch with minimal per-material branching, and early-terminating rays exit the loop cheaply rather than idling through remaining bounces. Profiling with Nsight showed warp efficiency climbing from roughly 40% to over 70% after the restructuring.',
-        ],
-      },
+      { heading: 'One Flutter product surface', paragraphs: ['The client is organised as a Flutter application, allowing the same widget and navigation model to serve supported platforms. The repository includes native platform directories, but the product behaviour remains centred in Dart.', 'That structure is valuable for a social product with many connected screens: profile changes, location selection, messaging, and post interactions can share models and presentation patterns instead of being reimplemented per platform.'], media: { type: 'image', src: '/images/pulse/home-screen.png', alt: 'Pulse feed screen', caption: 'The Flutter client brings feed and interaction flows into one application.' } },
+      { heading: 'Route-focused backend services', paragraphs: ['The TypeScript backend separates routes for authentication, posts, profiles, messages, settings, invitations, activity, highlights, and pulses. Firebase and Firebase Admin modules provide the shared service boundary, while a dedicated realtime module handles live interaction concerns.', 'This route-level separation makes the public implementation auditable: each product capability has a named entry point rather than disappearing into one large server file. Compiled output is present alongside the TypeScript source, making source/build hygiene an important next step.'] },
+      { heading: 'Location and geohash migration', paragraphs: ['Location discovery is a first-class concern in the repository. A geolocation service, Google Places integration, geohash migration notes, a backfill script, and map-facing client UI show how location data moves from input to indexed discovery.', 'The migration files are especially useful evidence because they record a data-model transition rather than only the final state. Backfilling existing records is part of shipping a new location representation safely.'], media: { type: 'image', src: '/images/pulse/map-page.png', alt: 'Pulse map discovery screen', caption: 'Map discovery is backed by explicit geolocation and geohash services.' } },
+      { heading: 'Recommendation service boundary', paragraphs: ['A Python ML service lives under the backend with its own Dockerfile, requirements, deployment helper, and usage documentation. Keeping it separate from request/response routes allows recommendation logic to evolve without forcing the Flutter client to know how scores are produced.', 'The repository therefore exposes three clear layers: the Dart product interface, TypeScript application services, and Python recommendation service. Their contracts deserve the same attention as their internal implementations.'], media: { type: 'video', src: '/images/pulse/PulseDemo.mp4', alt: 'Pulse application demonstration', caption: 'The product combines social, messaging, and discovery interactions.' } },
     ],
-    lessons: [
-      'GPU performance is memory layout first, algorithm second — coalesced access patterns beat clever math',
-      'Recursion is a CPU luxury; iterative formulations of the same algorithm are the price of massive parallelism',
-      'Per-thread random state is non-negotiable for Monte Carlo methods on GPUs',
-      'Profilers like Nsight are the only honest source of truth about warp divergence and occupancy',
-    ],
-    future: [
-      'A GPU-friendly BVH with stackless traversal for large scene support',
-      'Wavefront path tracing to sort rays by material and crush divergence',
-      'Progressive rendering with live viewport preview',
-    ],
+    lessons: ['Polyglot systems need explicit boundaries more than they need shared implementation languages', 'Data migrations and backfills are product features when discovery depends on them', 'Separating recommendation infrastructure keeps model work independent from the client'],
+    future: ['Remove committed credentials and rotate any exposed service keys', 'Keep generated backend output out of source-focused commits', 'Add contract tests between Flutter models, TypeScript routes, and recommendation responses'],
   },
-
+  'gpu-ray-tracer': {
+    slug: 'gpu-ray-tracer', readingTime: '7 min read',
+    intro: 'Raytracing-GPU is a compact CUDA renderer implemented in main.cu with reusable headers for vectors, rays, cameras, hittable objects, materials, spheres, and object lists. It writes rendered pixels to PPM output and keeps the complete host/device path visible in a small codebase.',
+    sections: [
+      { heading: 'Pixels mapped to CUDA work', paragraphs: ['The host program allocates the framebuffer and CUDA random states, configures launch dimensions, invokes scene and render kernels, and copies the finished pixels back for image output. The renderer maps image work onto a two-dimensional CUDA launch rather than hiding execution behind an engine.', 'This direct structure makes the cost model easy to study: allocation, kernel launch, synchronization, and transfer are all explicit.'] },
+      { heading: 'A device-side scene model', paragraphs: ['Geometry and material behaviour are split into headers such as sphere.h, material.h, hitable.h, and hitable_list.h. Camera rays, intersection records, and scattering logic are available to CUDA device code, allowing each thread to trace its own samples.', 'The design favours clarity over a complex acceleration structure. A hittable list provides a straightforward scene traversal and establishes the object model needed for future spatial indexing.'], media: [{ type: 'image', src: '/images/raytracer/raytracing.webp', alt: 'Output from the CUDA ray tracer', caption: 'CUDA threads evaluate camera rays and material interactions.' }, { type: 'image', src: '/images/raytracer/cornell.png', alt: 'Rendered Cornell-style scene', caption: 'PPM output provides a simple, inspectable render target.' }] },
+      { heading: 'Independent random sampling', paragraphs: ['The project uses cuRAND state so parallel render work can draw random samples without sharing one serialized generator. Randomness supports antialiasing and material scattering, both of which require many independent decisions across pixels.', 'Per-thread state is a practical GPU concern: correctness depends not only on the rendering equation but also on avoiding accidental correlation and unsafe shared mutation.'] },
+      { heading: 'What the repository proves', paragraphs: ['The public code verifies a CUDA render pipeline, scene abstraction, camera, sphere intersections, materials, and file output. It does not include benchmark records or an implemented BVH, so the portfolio presents those as future work rather than completed performance claims.', 'That distinction makes the project stronger: the implemented path is concrete, and the next optimisation questions are clear.'] },
+    ],
+    lessons: ['A small renderer is ideal for seeing host/device responsibilities without framework noise', 'Parallel random sampling requires explicit state design', 'Performance claims should follow profiling evidence, not the presence of CUDA alone'],
+    future: ['Add reproducible CPU/GPU benchmarks', 'Introduce a GPU-appropriate acceleration structure', 'Replace committed binaries and generated renders with release artifacts'],
+  },
   'vulkan-rendering-engine': {
-    slug: 'vulkan-rendering-engine',
-    readingTime: '8 min read',
-    intro:
-      'Vulkan is what graphics looks like when the driver stops doing you favors. Where OpenGL hides the GPU behind a stateful context, Vulkan hands over every detail — memory, synchronization, pipeline state, presentation — and makes you responsible for all of it. This project builds a real-time rendering engine directly on that API, with roughly a thousand lines of deliberate setup standing between an empty window and the first triangle.',
+    slug: 'vulkan-rendering-engine', readingTime: '7 min read',
+    intro: 'Vulkan-Programming is a focused Windows/C++ Vulkan exercise. Its public source is concentrated in a Visual Studio project, a main.cpp implementation, and compiled vertex and fragment shader artifacts, making it a useful record of explicit graphics setup without claiming a larger engine than the repository contains.',
     sections: [
-      {
-        heading: 'The thousand-line triangle',
-        paragraphs: [
-          'The famous Vulkan initiation ritual is real: instance creation, validation layers, physical device selection, logical device and queue creation, surface and swapchain setup, image views, render passes, framebuffers, pipeline layout, shader stages, command pools, command buffers, and synchronization primitives — all before one triangle appears.',
-          'The engine treats this not as boilerplate to rush through but as an architecture to own. Each concern lives in its own subsystem with explicit lifetime management, because in Vulkan every object you create, you must destroy — in the correct order, after the GPU is provably done with it.',
-        ],
-      },
-      {
-        heading: 'Explicit synchronization, or: the GPU is a remote server',
-        paragraphs: [
-          'The hardest mental shift in Vulkan is that the CPU and GPU are asynchronous machines that share nothing by default. Recording a command buffer does nothing; submitting it starts work that finishes at some unknowable future time. Every dependency must be declared: semaphores order work on the GPU timeline, fences let the CPU wait on the GPU, and pipeline barriers order memory access within the GPU itself.',
-          'The engine implements the canonical frames-in-flight pattern — multiple frames of command buffers and sync objects rotating so the CPU can record frame N+1 while the GPU draws frame N. Getting this wrong does not always crash; sometimes it just flickers once a minute, which is far worse to debug.',
-        ],
-        code: {
-          language: 'cpp',
-          label: 'renderer.cpp — one frame with explicit sync',
-          snippet: `void Renderer::drawFrame() {
-    // Wait until this frame slot's previous work is done
-    vkWaitForFences(device, 1, &inFlight[frame], VK_TRUE, UINT64_MAX);
-    vkResetFences(device, 1, &inFlight[frame]);
-
-    uint32_t imageIndex;
-    vkAcquireNextImageKHR(device, swapchain, UINT64_MAX,
-                          imageAvailable[frame], VK_NULL_HANDLE, &imageIndex);
-
-    recordCommands(commandBuffers[frame], imageIndex);
-
-    VkSubmitInfo submit{VK_STRUCTURE_TYPE_SUBMIT_INFO};
-    VkPipelineStageFlags waitStage =
-        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    submit.waitSemaphoreCount   = 1;
-    submit.pWaitSemaphores      = &imageAvailable[frame];
-    submit.pWaitDstStageMask    = &waitStage;
-    submit.signalSemaphoreCount = 1;
-    submit.pSignalSemaphores    = &renderFinished[frame];
-
-    vkQueueSubmit(graphicsQueue, 1, &submit, inFlight[frame]);
-    present(imageIndex, renderFinished[frame]);
-    frame = (frame + 1) % MAX_FRAMES_IN_FLIGHT;
-}`,
-        },
-      },
-      {
-        heading: 'Shaders as compiled artifacts',
-        paragraphs: [
-          'Vulkan consumes SPIR-V bytecode, not shader source. GLSL shaders are compiled offline with glslc as part of the build, which moves shader errors from mysterious runtime failures to ordinary compile-time errors — one of Vulkan\u2019s quiet quality-of-life wins.',
-          'Pipeline state is baked ahead of time too: blend modes, depth testing, vertex layouts, and shader stages are fixed into immutable pipeline objects. The draw loop does no state validation at all, which is precisely where Vulkan\u2019s performance headroom comes from.',
-        ],
-      },
-      {
-        heading: 'Surviving the swapchain',
-        paragraphs: [
-          'The swapchain — the queue of images presented to the screen — can be invalidated at any moment by a window resize or a display change. The engine handles VK_ERROR_OUT_OF_DATE_KHR by tearing down and rebuilding the swapchain and everything derived from it: image views, framebuffers, and any pipeline state tied to the surface format.',
-          'Validation layers were indispensable throughout. Vulkan without validation layers fails silently or corrupts memory; with them, every misuse is reported with the object handle and the exact spec rule violated. They stay on in every debug build, no exceptions.',
-        ],
-      },
+      { heading: 'Owning Vulkan setup', paragraphs: ['The application source works directly with Vulkan’s explicit object model. Instance, device, queue, surface, swapchain, image, render-pass, pipeline, command, and synchronization responsibilities are visible to the application rather than delegated to a high-level renderer.', 'That verbosity is the learning objective: resource lifetimes and setup order become concrete, and failures can be traced to a specific API boundary.'] },
+      { heading: 'Shaders as build artifacts', paragraphs: ['The repository contains SPIR-V vertex and fragment shader files under the project shader directory. Vulkan consumes these compiled modules as part of pipeline creation, so shader compilation is a separate build concern from C++ compilation.', 'Keeping the artifact boundary visible helps explain why pipeline state is prepared ahead of drawing instead of assembled implicitly on every frame.'] },
+      { heading: 'Presentation and synchronization', paragraphs: ['A Vulkan frame depends on image acquisition, command submission, and presentation happening in a valid order. The exercise exposes the semaphores and fences needed to coordinate that work.', 'Even in a small application, swapchain resources are tied to the window surface and must be treated as a group. This is one of the clearest lessons Vulkan offers about explicit ownership.'] },
+      { heading: 'Repository scope', paragraphs: ['The public project is an early graphics exercise rather than a feature-complete rendering engine. Visual Studio build output is committed beside the source, while the implementation itself is centred in one main file.', 'Presenting that scope accurately keeps the deep dive useful: it documents the Vulkan concepts exercised and identifies modularisation, asset handling, and reproducible shader builds as the next engineering steps.'] },
     ],
-    lessons: [
-      'Vulkan\u2019s verbosity is a specification of GPU reality — learning it means learning how graphics hardware actually works',
-      'Synchronization bugs are timing-dependent and invisible; design the sync architecture before writing draw code',
-      'Ahead-of-time pipeline compilation trades startup cost for a draw loop with zero driver guesswork',
-      'Validation layers are not optional tooling, they are half the API',
-    ],
-    future: [
-      'A render graph to derive barriers and passes automatically',
-      'Deferred shading with multiple render targets',
-      'Compute shader integration for GPU-driven culling',
-    ],
+    lessons: ['Vulkan makes resource ownership and synchronization application responsibilities', 'Compiled shaders and pipeline setup belong in the build architecture', 'A focused exercise should be described by the API paths it proves, not by unimplemented engine features'],
+    future: ['Split setup into lifetime-safe renderer components', 'Add source shaders and a reproducible SPIR-V compilation step', 'Move IDE and binary output to ignored build directories'],
   },
-
   'software-ray-caster': {
-    slug: 'software-ray-caster',
-    readingTime: '7 min read',
-    intro:
-      'Before GPUs, before Z-buffers, before 3D hardware of any kind, Wolfenstein 3D rendered corridors at speed on a 286 with one trick: raycasting. This project rebuilds that trick from first principles in pure C — a real-time 3D view computed column by column with nothing but arithmetic, a 2D grid, and a framebuffer.',
+    slug: 'software-ray-caster', readingTime: '7 min read',
+    intro: 'RayCaster is a C software-rendering project concentrated in Raycaster.c with a set of bitmap and PPM texture atlases. It builds a first-person view without a 3D graphics API, which makes every projection, collision, and texture decision inspectable in application code.',
     sections: [
-      {
-        heading: 'One ray per screen column',
-        paragraphs: [
-          'The core insight of raycasting is dimensional reduction. A true ray tracer fires a ray per pixel; a raycaster fires one ray per screen column — 320 rays instead of 64,000 — because in a world of vertical walls on a flat floor, everything in a column is determined by a single wall hit.',
-          'Each frame walks the screen left to right: compute the ray direction for this column from the player\u2019s facing direction and field of view, march the ray through the map grid until it hits a wall, then use the hit distance to decide how tall the wall should appear. Near walls are tall, far walls are short. That is the whole illusion.',
-        ],
-        media: {
-          type: 'image',
-          src: '/images/raycaster/raycaster.png',
-          alt: 'A basic view of the raycasted 3D world',
-          caption: 'Rendering vertical strips of textures based on the ray intersection distance'
-        }
-      },
-      {
-        heading: 'DDA: marching a grid perfectly',
-        paragraphs: [
-          'The naive way to march a ray is to step it forward in small increments and check for walls — slow, and it can tunnel straight through corners. The Digital Differential Analyzer algorithm is exact: since the map is a grid, the ray can jump directly from one grid-line crossing to the next, checking exactly the cells it passes through and never missing one.',
-          'DDA maintains two running distances — to the next vertical grid line and the next horizontal one — and always steps whichever is nearer. Each step is two comparisons and an addition. Wall hits are found in a handful of iterations, making the frame cost predictable regardless of ray direction.',
-        ],
-        code: {
-          language: 'c',
-          label: 'raycast.c — the DDA marching loop',
-          snippet: `while (!hit) {
-    if (side_dist_x < side_dist_y) {
-        side_dist_x += delta_dist_x;   /* jump to next vertical line */
-        map_x += step_x;
-        side = 0;
-    } else {
-        side_dist_y += delta_dist_y;   /* jump to next horizontal line */
-        map_y += step_y;
-        side = 1;
-    }
-    if (world_map[map_x][map_y] > 0) hit = 1;
-}
-/* Perpendicular distance avoids fisheye distortion */
-double perp_dist = (side == 0)
-    ? side_dist_x - delta_dist_x
-    : side_dist_y - delta_dist_y;
-int line_height = (int)(SCREEN_H / perp_dist);`,
-        },
-      },
-      {
-        heading: 'The fisheye problem',
-        paragraphs: [
-          'The first working build had a bug that is a rite of passage for every raycaster: walls bulged outward like the world was seen through a peephole. The cause is using true Euclidean ray distance for wall height — rays at the edge of the field of view travel farther to reach the same wall plane, so edge columns render shorter.',
-          'The fix is projecting the hit distance onto the camera\u2019s viewing direction — the perpendicular distance to the camera plane rather than the distance along the ray. One line of math, and the corridors snap straight. It is a perfect miniature of graphics programming: the bug is geometric, and so is the fix.',
-        ],
-        media: {
-          type: 'image',
-          src: '/images/raycaster/scaryenemy.png',
-          alt: 'A textured enemy sprite in the raycasted world',
-          caption: 'Combining perpendicular distance projection with sprite rendering'
-        }
-      },
-      {
-        heading: 'Texturing on a budget',
-        paragraphs: [
-          'Flat-shaded walls prove the math works; textures make it a world. The exact point where the ray strikes the wall determines which column of the texture to sample, and the wall\u2019s on-screen height determines the vertical stride through that texture column.',
-          'The inner loop — sample texel, write pixel, step — runs for every visible pixel every frame, entirely on the CPU. Keeping it real-time meant fixed-point-friendly arithmetic, hoisting every invariant out of the loop, and treating the framebuffer as a flat array written in strict column order for cache friendliness. Distance-based shading, darkening far walls and side-facing walls, adds depth perception for a single multiply per column.',
-        ],
-      },
+      { heading: 'A grid becomes a 3D view', paragraphs: ['The renderer treats the world as a two-dimensional map and casts viewing rays across the screen. Wall-hit distance determines projected height, turning grid intersections into vertical slices of a first-person scene.', 'This is a deliberately constrained rendering model. It trades arbitrary geometry for a fast and understandable path from map cells to pixels.'], media: { type: 'image', src: '/images/raycaster/raycaster.png', alt: 'RayCaster first-person view', caption: 'A software-rendered scene produced from a grid map and texture data.' } },
+      { heading: 'DDA traversal and projection', paragraphs: ['Digital Differential Analyzer traversal advances through grid boundaries rather than taking tiny floating-point steps. The method determines which cell is entered next and stops when the ray reaches a wall.', 'Using distance relative to the camera plane keeps the projection visually straight. The implementation demonstrates how camera geometry and map traversal meet in the inner render loop.'] },
+      { heading: 'Texture and sprite assets', paragraphs: ['The Textures directory contains source atlases for walls, sky, sprites, title, win, and loss screens in BMP and PPM forms. These assets show that the project includes a presentation and game-state layer as well as wall projection.', 'Texture coordinates are derived from the wall hit and sampled while drawing each vertical strip. Sprite imagery adds scene elements that are not part of the wall grid.'], media: { type: 'image', src: '/images/raycaster/scaryenemy.png', alt: 'Sprite displayed in the software ray caster', caption: 'Sprite assets are composed with the wall-rendering pass.' } },
+      { heading: 'A single-file implementation', paragraphs: ['Keeping the renderer and game flow together makes the prototype easy to follow, but it also couples input, simulation, asset loading, and drawing. The repository includes Windows build output beside source and textures.', 'The next refinement is structural rather than cosmetic: split the renderer, world model, platform layer, and assets so each can be tested and changed independently.'] },
     ],
-    lessons: [
-      'Constraints are the engine: restricting the world to a 2D grid is what makes real-time 3D possible without hardware',
-      'Geometric bugs need geometric reasoning — the fisheye fix cannot be found by staring at code, only by drawing the diagram',
-      'Per-pixel inner loops make CPU cost visceral in a way no profiler can teach',
-      'Every modern GPU concept — projection, sampling, shading — exists here in miniature, implementable by hand',
-    ],
-    future: [
-      'Floor and ceiling casting with per-pixel horizontal texture mapping',
-      'Sprite rendering with depth-sorted billboards',
-      'Doors, thin walls, and variable-height sectors, Doom-style',
-    ],
+    lessons: ['A constrained world model can make real-time software rendering practical', 'Projection bugs are often geometry problems rather than syntax problems', 'Asset handling and game states are part of a renderer once it becomes an experience'],
+    future: ['Separate platform, renderer, and world modules', 'Document controls and the texture-atlas format', 'Add frame-time measurements and reproducible builds'],
   },
-
   'rust-systems-lab': {
-    slug: 'rust-systems-lab',
-    readingTime: '8 min read',
-    intro:
-      'Rust makes a claim that sounds too good to be true: memory safety and data-race freedom, verified at compile time, with zero runtime cost. This project is a sustained investigation of that claim — over a million bytes of Rust across a workspace of focused crates, each isolating one systems concept, from ownership mechanics down to the LLVM IR the compiler actually emits.',
+    slug: 'rust-systems-lab', readingTime: '6 min read',
+    intro: 'Rust-Programming is a collection of game-development experiments rather than a million-line systems laboratory. The clearest source-backed project in the repository is an Amethyst Pong implementation organised around Rust modules and ECS-style systems.',
     sections: [
-      {
-        heading: 'A laboratory, not a tutorial',
-        paragraphs: [
-          'The repository is structured as a Cargo workspace where each crate is an experiment with a question. What does a self-referential struct actually require? When does an Arc<Mutex<T>> beat a channel? What assembly does an iterator chain compile to? Each crate is small enough to reason about completely and pointed enough to answer its question definitively.',
-          'This structure mirrors how systems knowledge is actually built: not by reading about concepts but by constructing minimal cases where the concept is the only thing happening.',
-        ],
-      },
-      {
-        heading: 'Ownership as a design language',
-        paragraphs: [
-          'The borrow checker\u2019s rules fit on an index card — one mutable reference or any number of shared ones, and no reference outlives its data. Living with those rules in complex data structures is where the real learning happens. Doubly-linked lists, graphs, and arena allocators all force explicit decisions that C lets you defer until the segfault.',
-          'The recurring insight: when the borrow checker fights back, it is usually objecting to the design, not the syntax. Restructuring ownership — indices instead of pointers, arenas instead of individual allocations, message passing instead of sharing — almost always produced designs that were also better C++ designs. The compiler was functioning as an architecture reviewer.',
-        ],
-        code: {
-          language: 'rust',
-          label: 'concurrency/src/workers.rs — fearless concurrency in practice',
-          snippet: `fn parallel_sum(data: Vec<u64>, workers: usize) -> u64 {
-    let data = Arc::new(data);
-    let chunk = data.len().div_ceil(workers);
-
-    let handles: Vec<_> = (0..workers)
-        .map(|i| {
-            let data = Arc::clone(&data);
-            thread::spawn(move || {
-                let start = i * chunk;
-                let end = (start + chunk).min(data.len());
-                data[start..end].iter().sum::<u64>()
-            })
-        })
-        .collect();
-
-    // If this compiles, there is no data race. Not "probably" — provably.
-    handles.into_iter().map(|h| h.join().unwrap()).sum()
-}`,
-        },
-      },
-      {
-        heading: 'Concurrency without fear, verified',
-        paragraphs: [
-          'The concurrency crates put Rust\u2019s marquee claim under load: threads sharing state through Arc and Mutex, channels moving ownership across thread boundaries, and atomics with explicit memory orderings. The Send and Sync marker traits turn data-race prevention into a type-checking problem — code that would race simply does not compile.',
-          'The atomics experiments went deepest: comparing Relaxed, Acquire/Release, and SeqCst orderings and observing where the compiler and CPU are permitted to reorder operations. Rust did not remove the difficulty of memory ordering, but it fenced it into a small, explicitly-marked corner of the codebase.',
-        ],
-      },
-      {
-        heading: 'Trust, but read the IR',
-        paragraphs: [
-          '"Zero-cost abstraction" is a claim that can be checked. Several crates exist purely to emit LLVM IR and assembly — comparing an idiomatic iterator chain against a hand-written index loop, checking whether bounds checks survive optimization, watching a generic function monomorphize into specialized machine code.',
-          'The results largely vindicate the claim: iterator pipelines compile to the same vectorized loops as manual C-style code, and abstraction layers dissolve completely under optimization. Finding the exceptions — where a stray bounds check or a missed inline survives — taught more about the compiler than any documentation could.',
-        ],
-      },
-      {
-        heading: 'Unsafe as a scalpel',
-        paragraphs: [
-          'The unsafe crates explore the boundary layer: raw pointers, manual memory layout, FFI declarations, and hand-built abstractions like a miniature Vec. The discipline that emerged is the one the standard library itself uses — unsafe blocks kept minimal, wrapped in safe APIs whose invariants are documented and enforced at the boundary.',
-          'Writing unsafe Rust after safe Rust is clarifying in both directions: it reveals exactly which guarantees the safe language was providing, and it shows that those guarantees have a precise, local, auditable cost when you need to step outside them.',
-        ],
-      },
+      { heading: 'Repository as an experiment archive', paragraphs: ['The repository contains multiple self-contained Rust project directories, including framework starter code and generated build trees. This makes it evidence of broad experimentation, but not one cohesive Cargo workspace.', 'The portfolio therefore focuses on the source that can be inspected directly and treats generated target output as repository hygiene to improve.'] },
+      { heading: 'Amethyst Pong structure', paragraphs: ['The Amethyst project separates startup state in main.rs and pong.rs from systems for ball movement, paddle input, collision response, and winning conditions. Configuration files hold display and input bindings.', 'This system-oriented structure is the technical centre of the project. Behaviour is decomposed by responsibility and scheduled over shared game state rather than concentrated in one update function.'] },
+      { heading: 'ECS as a design constraint', paragraphs: ['Entity-component-system architecture encourages data and behaviour to be modelled separately. Paddles, balls, transforms, and scores become composable state, while focused systems query and update the parts they need.', 'For a small Pong game this may look elaborate, but it reveals how an engine architecture scales beyond one object hierarchy. It also makes ordering between movement, collision, and scoring an explicit concern.'] },
+      { heading: 'What should be cleaned next', paragraphs: ['Large target directories and dependency artifacts dominate the public repository. They prove local builds happened, but they obscure authored source and make Git history harder to review.', 'A curated set of source-only examples, each with a short README and lockfile policy, would turn the experiment archive into a much stronger learning record.'] },
     ],
-    lessons: [
-      'The borrow checker is an architecture reviewer — designs it accepts are usually better designs in any language',
-      'Send and Sync convert data races from runtime bugs into type errors, and that changes how ambitiously you write concurrent code',
-      'Zero-cost abstraction is measurable: read the LLVM IR instead of taking the slogan on faith',
-      'Unsafe Rust is best understood as a contract system — small blocks, documented invariants, safe wrappers',
-    ],
-    future: [
-      'An async runtime built from raw futures to demystify executors and wakers',
-      'A lock-free queue with hazard-pointer memory reclamation',
-      'no_std experiments targeting bare-metal embedded boards',
-    ],
+    lessons: ['Repository structure should distinguish authored experiments from generated dependencies', 'ECS systems make game-update responsibilities and ordering explicit', 'Accurate scope is more credible than counting generated code as authored work'],
+    future: ['Remove target directories and generated dependencies from version control', 'Curate the strongest experiments into documented source-only projects', 'Add tests for scoring and collision edge cases'],
   },
-}
-
-export const projectArticles: Record<string, ProjectArticle> = {
-  ...existingProjectArticles,
-  ...supplementalProjectArticles,
+  'hospital-management-platform': {
+    slug: 'hospital-management-platform', readingTime: '8 min read',
+    intro: 'Hospital Management Platform is a deployed Next.js application with dedicated patient, doctor, staff, and administrator workflows. Its repository exposes the full product surface: appointment routes, role-specific pages, Prisma migrations, test-result delivery, two-factor flows, reminders, and communication integrations.',
+    sections: [
+      { heading: 'Roles shape the application', paragraphs: ['Patient, doctor, staff, and administrator experiences have separate pages and API routes rather than one dashboard with hidden controls. Doctor appointment, patient, profile, and test views sit beside patient booking, records, and authentication flows.', 'This route structure makes responsibilities visible, but real security still depends on server-side authorization at every data boundary. The distinction between a role-specific UI and an enforced permission is central to this kind of system.'], media: { type: 'video', src: '/images/hospitaldatabase/2025-07-13 21-59-32.mp4', alt: 'Hospital Management Platform role-based workflow', caption: 'Separate product surfaces support patient, clinician, staff, and administrator tasks.' } },
+      { heading: 'Relational workflow data', paragraphs: ['Prisma migrations record the evolution of appointments, doctor and patient profiles, services, contact details, preferences, staff access, two-factor fields, and test results. These are connected workflow entities rather than a single unstructured profile document.', 'The migration history is valuable technical evidence: it shows the schema changing as appointment notes, duration, priority, contacts, and clinical-result requirements emerged.'] },
+      { heading: 'Authentication is several flows', paragraphs: ['The API tree includes password login, registration, logout, current-user lookup, doctor and staff login, authenticator setup, SMS code delivery, and multiple verification routes. Password hashing and JWT packages are part of the stack.', 'Having focused routes makes each flow easier to find, but it also increases the need for shared validation, rate limiting, consistent session rules, and tests that prevent role crossover.'] },
+      { heading: 'Notifications and result delivery', paragraphs: ['Appointment reminders, email setup, SMS integrations, and downloadable patient test-result routes connect stored data to real user communication. A PDF route turns a structured result into a patient-facing document.', 'These integrations make operational failure part of the product: retries, provider configuration, audit history, and safe error messages matter alongside the happy path.'] },
+    ],
+    lessons: ['Role-specific navigation must be backed by per-request authorization', 'Migration history documents how real workflow requirements reshape data', 'Notification and document delivery need explicit failure handling'],
+    future: ['Centralise and test authorization policies for every role-sensitive query', 'Add integration tests for appointments, 2FA, reminders, and result downloads', 'Document secrets management and production provider configuration'],
+  },
+  'biology-challenge-site': {
+    slug: 'biology-challenge-site', readingTime: '6 min read',
+    intro: 'Biology Challenge is a Next.js educational site whose repository combines subject imagery, custom page components, theme support, and reusable Radix-based UI. The strongest implementation detail is not a backend claim but the way visual biology content is assembled into an interactive web experience.',
+    sections: [
+      { heading: 'An App Router composition', paragraphs: ['The source contains a root layout, landing and home routes, a profile route, header, image-section components, and a theme provider. Shared UI primitives for buttons, cards, dialogs, dropdowns, avatars, and scrolling support the page-level composition.', 'This separation keeps the subject-specific pieces focused while common interactions remain reusable and accessible.'], media: { type: 'image', src: '/images/biologywebsite/biology-website.png', alt: 'Biology Challenge interface', caption: 'Subject imagery and reusable components form the main experience.' } },
+      { heading: 'Content-led visual structure', paragraphs: ['Biology imagery is stored with the application and composed through image-focused components. The public tree includes fossil, predation, herd, and supporting visual assets, showing that the experience is built around concrete educational media rather than decorative placeholders.', 'The challenge is maintaining readable hierarchy around visually strong material. Image sections need captions, meaningful alternative text, predictable cropping, and responsive layouts.'], media: { type: 'image', src: '/images/biologywebsite/aboutus.png', alt: 'Biology Challenge profile or about section', caption: 'Profile and supporting pages reuse the site’s component vocabulary.' } },
+      { heading: 'Theme and interaction primitives', paragraphs: ['A theme button and provider establish light/dark presentation at the application level. Radix-backed components provide behaviour for dialogs, dropdowns, scrolling, and other controls, while Tailwind handles the visual layer.', 'Using primitives narrows the amount of interaction code that must be invented locally and gives custom presentation a stronger accessibility baseline.'] },
+      { heading: 'From showcase to learning product', paragraphs: ['The repository verifies a polished educational website, but it does not expose a complete challenge engine, assessment model, or progress backend. Those should remain future product work rather than implied current features.', 'The next useful step is to connect the strong presentation layer to structured learning content and measurable learner state.'] },
+    ],
+    lessons: ['Concrete subject media creates a stronger educational identity than generic decoration', 'Reusable interaction primitives reduce accessibility risk', 'A visual showcase and an assessment product should be described as different scopes'],
+    future: ['Add structured challenge content with accessible answer feedback', 'Provide reduced-motion and robust image-caption treatment', 'Introduce persisted learner progress only with a proper backend'],
+  },
+  'pico-drone-controller': {
+    slug: 'pico-drone-controller', readingTime: '7 min read',
+    intro: 'Drone-Main is Raspberry Pi Pico firmware that combines a BNO055 orientation sensor, NRF24L01 radio input, and reusable PID controller code. Its public source shows the control-loop integration and Pico SDK build rather than a complete production flight stack.',
+    sections: [
+      { heading: 'Sensor bring-up', paragraphs: ['The project includes BNO055 C/C++ support and initialises orientation sensing for the Pico application. Calibration and Euler orientation data provide roll, pitch, and heading inputs to the controller.', 'Sensor bring-up is part of control correctness. Mode selection, calibration state, bus communication, and units all need to be known before gains have any meaning.'] },
+      { heading: 'Independent PID axes', paragraphs: ['PID_v1.cpp and its header implement reusable proportional, integral, and derivative behaviour. The main application creates separate control paths for roll, pitch, and yaw and feeds them measured orientation and requested setpoints.', 'Separate axes are easy to inspect and tune initially, while also exposing the limitation that a real airframe couples those motions. Output limits and sample timing are as important as the three gains.'] },
+      { heading: 'Radio input and loop integration', paragraphs: ['NRF24L01 input brings pilot commands into the loop. The main C++ file coordinates joystick values, IMU readings, controller calculations, and serial output within one embedded application.', 'This is the project’s strongest engineering evidence: several hardware-facing libraries are composed into one deterministic control path under the Pico SDK.'], media: { type: 'image', src: '/images/robotics/vex.jpg', alt: 'Embedded robotics hardware', caption: 'The firmware work sits at the boundary between sensors, radio control, and actuators.' } },
+      { heading: 'Safety boundary', paragraphs: ['The repository shows control calculations and downstream output, but it should not be presented as a verified autonomous flight controller. Motor mixing, arming, radio-loss behaviour, watchdogs, and hardware-in-the-loop validation are safety-critical next steps.', 'Making that boundary explicit is part of responsible embedded documentation.'] },
+    ],
+    lessons: ['Control gains are inseparable from sensor quality and sample timing', 'Hardware integrations benefit from focused drivers and one readable main loop', 'Flight-control prototypes need explicit safety and validation boundaries'],
+    future: ['Add arming, watchdog, radio-loss, and output failsafes', 'Implement and bench-test motor mixing', 'Record timestamped telemetry for repeatable gain tuning'],
+  },
+  'networked-mastermind': {
+    slug: 'networked-mastermind', readingTime: '7 min read',
+    intro: 'Mastermind is an A Level Computer Science project built in GameMaker. The repository contains maker, breaker, client, server, and single-player controllers; rooms and assets; save/load objects; scoring feedback; and a MultiClient extension for network communication.',
+    sections: [
+      { heading: 'Rules as controller state', paragraphs: ['GameMaker objects coordinate peg selection, row progression, guess submission, validation feedback, and terminal win/loss states. Separate colour and slot objects provide the board pieces while controller events own transitions.', 'This object/event model suits a turn-based game because input, validation, and drawing happen at well-defined moments instead of one continuous simulation loop.'], media: { type: 'video', src: '/images/mastermind/2025-01-27 22-23-07.mp4', alt: 'Networked Mastermind gameplay', caption: 'A complete maker-and-breaker game flow built in GameMaker.' } },
+      { heading: 'Maker, breaker, and network roles', paragraphs: ['Dedicated maker and client/server controller objects make the hidden-code roles explicit. The MultiClient extension includes platform-specific post-run helpers and supports messages that coordinate peers.', 'For a turn-based game, exchanging role and outcome state is more appropriate than attempting to synchronize rendering every frame. The network protocol should still document message shapes and failure behaviour.'] },
+      { heading: 'Scoring duplicate colours', paragraphs: ['Mastermind scoring must distinguish exact-position matches from correct colours in the wrong position without counting one peg twice. The validation controller is therefore more than a UI concern: it is the rules engine for each submitted row.', 'This is a strong candidate for isolated tests because duplicate-colour combinations are easy to reason about incorrectly through manual play alone.'] },
+      { heading: 'A complete submission surface', paragraphs: ['Rooms, sprites, audio, UI controls, data files, save/load objects, and single-player support make the repository a complete coursework game rather than only a networking proof of concept.', 'The next refinement is reproducibility: document controls, protocol assumptions, and build steps so another person can run the project without reverse-engineering the GameMaker object tree.'] },
+    ],
+    lessons: ['Turn-based games benefit from explicit state transitions', 'Network messages should communicate game facts rather than rendering state', 'Duplicate-colour scoring deserves isolated tests'],
+    future: ['Add automated cases for duplicate-colour scoring', 'Document network messages, ports, and reconnect behaviour', 'Publish a clean build guide and release artifact'],
+  },
+  'minecraft-mod-prototype': {
+    slug: 'minecraft-mod-prototype', readingTime: '5 min read',
+    intro: 'testmod is an early Java modding repository with a Gradle build, Forge-oriented development configuration, and a Blockbench model asset. Most of its large public footprint is generated Minecraft build output, so this deep dive focuses only on the authored project structure that can be verified.',
+    sections: [
+      { heading: 'Working inside a host runtime', paragraphs: ['Minecraft mod development starts from the host application’s lifecycle, mappings, registries, and build conventions. The Gradle project and launch configuration establish that environment before custom content can run.', 'This is a useful lesson in extension engineering: the application controls startup and rendering, while the mod connects at supported registration and event boundaries.'], media: { type: 'image', src: '/images/minecraftmod/minecraft.png', alt: 'Minecraft mod prototype running in game', caption: 'Custom content is tested inside the Forge development runtime.' } },
+      { heading: 'From Blockbench to game asset', paragraphs: ['The bbmodels directory contains a Blockbench model. A model only becomes game content after export, resource placement, naming, registration, and association with behaviour.', 'That pipeline joins visual authoring to Java runtime code and makes asset conventions part of the programming interface.'], media: { type: 'image', src: '/images/minecraftmod/mcdim.png', alt: 'Custom Minecraft environment from the prototype', caption: 'The prototype explores the path from authored assets to in-game presentation.' } },
+      { heading: 'Generated output versus authored source', paragraphs: ['The repository commits a very large build tree containing transformed and compiled Minecraft classes. Those files are tool output, not authored project implementation, and they make the meaningful mod code difficult to review.', 'Accurate portfolio treatment means not using that generated size as a project metric. A clean ignore policy and source-only history would make the actual contribution much clearer.'] },
+      { heading: 'Prototype scope', paragraphs: ['The public project proves familiarity with the Gradle/Forge development environment and model pipeline. It does not currently provide a clear feature README, packaged release, or clean source tree.', 'The best next step is curation: isolate the mod entry points and resources, explain the gameplay feature, and publish a reproducible release.'] },
+    ],
+    lessons: ['Host applications dictate extension lifecycle and build constraints', 'Asset naming and registration are executable parts of a game pipeline', 'Generated dependencies should never be presented as authored code'],
+    future: ['Remove generated build and Minecraft class output from Git history', 'Document the implemented content and registration path', 'Publish a source-focused Forge project and playable release'],
+  },
 }
