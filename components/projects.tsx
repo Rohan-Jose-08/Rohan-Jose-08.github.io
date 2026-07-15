@@ -154,7 +154,7 @@ export function Projects({ repos }: { repos: GitHubRepo[] }) {
       <SectionHeading
         eyebrow="02 / Featured work"
         title="Projects built from first principles"
-        description="A curated set of 11 public repositories. Every deep dive is grounded in the implementation, file structure, and documentation visible in source."
+        description="A curated set of 13 public repositories. Every deep dive is grounded in the implementation, file structure, and documentation visible in source."
       />
       <Reveal className="mb-10">
         <div className="mb-4 flex items-center justify-between gap-4">
