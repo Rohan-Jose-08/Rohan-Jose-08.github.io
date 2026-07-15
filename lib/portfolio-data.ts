@@ -19,17 +19,17 @@ export const featuredProjects: FeaturedProject[] = [
     title: 'Operating System Kernel',
     tagline: 'A kernel written from scratch in C and x86 Assembly',
     description:
-      'A from-scratch operating system: bootloader, protected-mode kernel, interrupt handling, memory management, and hardware drivers — over 1.2 MB of hand-written C running directly on bare metal.',
+      'A hobbyist i386 multiboot operating system with a monolithic C kernel, paging, interrupts, ATA and audio drivers, a graphics shell, custom libc, and a bundled userland packaged as a bootable ISO.',
     challenges: [
-      'Bootstrapping from real mode to protected mode with a custom bootloader',
-      'Writing interrupt descriptor tables and hardware interrupt handlers',
-      'Manual memory management with no standard library or runtime',
+      'Coordinating paging, IRQs, device drivers, and user-mode transitions on i386',
+      'Building a custom libc and GUI layer for bundled user applications',
+      'Cross-compiling and packaging the workspace into GRUB boot media',
     ],
     architecture:
-      'Layered kernel design: Assembly boot stage → C kernel core → driver layer, linked with custom linker scripts and built via a bare-metal Makefile toolchain.',
-    tech: ['C', 'x86 Assembly', 'Linker Scripts', 'QEMU', 'Make'],
+      'GRUB multiboot entry → monolithic i386 kernel and drivers → custom libc/libgui → embedded and disk-backed user applications, assembled through an i686-elf cross-toolchain.',
+    tech: ['C', 'x86 Assembly', 'GRUB', 'QEMU', 'Make'],
     category: 'Systems',
-    metrics: '1.2 MB of kernel C, zero external dependencies',
+    metrics: 'Kernel, custom libc, GUI library, and bundled userland',
   },
   {
     repo: 'pulse-app',
@@ -37,17 +37,17 @@ export const featuredProjects: FeaturedProject[] = [
     title: 'Pulse — Social Platform',
     tagline: 'Cross-platform social app with a full backend',
     description:
-      'A full social platform built with Flutter and a TypeScript + Python backend — feeds, profiles, and real-time interactions shipped across iOS, Android, and web from a single codebase.',
+      'A Flutter social application with TypeScript backend routes, Firebase services, real-time messaging, geohash-based discovery, and a separate Python recommendation service.',
     challenges: [
-      'Designing a scalable feed and interaction model',
-      'Coordinating a polyglot stack: Dart client, TypeScript API, Python services',
-      'Shipping to multiple platforms from one codebase',
+      'Keeping location-aware posts and map discovery consistent through geohashes',
+      'Coordinating Flutter, TypeScript/Firebase, and a Python recommendation service',
+      'Supporting messages, invitations, profiles, highlights, and activity flows',
     ],
     architecture:
-      'Flutter client → TypeScript API layer → Python service workers, with platform channels for native iOS/Android integration.',
-    tech: ['Dart', 'Flutter', 'TypeScript', 'Python', 'Kotlin', 'Swift'],
+      'Flutter client → TypeScript/Firebase backend and real-time layer → Python ML service, with shared product flows for posts, profiles, messaging, and location discovery.',
+    tech: ['Dart', 'Flutter', 'TypeScript', 'Firebase', 'Python'],
     category: 'Full-Stack',
-    metrics: '2.5 MB Dart + 400 KB TypeScript across 12 languages',
+    metrics: 'Flutter client, API backend, and ML service',
   },
   {
     repo: 'Raytracing-GPU',
@@ -55,17 +55,17 @@ export const featuredProjects: FeaturedProject[] = [
     title: 'GPU Ray Tracer',
     tagline: 'CUDA-accelerated physically-based rendering',
     description:
-      'A physically-based ray tracer moved from CPU to GPU with CUDA kernels — parallelizing ray-scene intersection, materials, and sampling across thousands of GPU threads.',
+      'A compact CUDA ray tracer that assigns pixels to GPU threads and implements spheres, camera rays, materials, random sampling, and PPM image output in C++/CUDA.',
     challenges: [
-      'Restructuring recursive ray tracing into iterative GPU-friendly kernels',
-      'Managing device memory and host–device transfer overhead',
-      'Balancing thread divergence in material scattering code',
+      'Moving ray generation and colour sampling into CUDA device code',
+      'Maintaining independent cuRAND state for parallel samples',
+      'Representing camera, sphere, and material logic across host and device code',
     ],
     architecture:
-      'CUDA kernel pipeline: ray generation → BVH traversal → material scatter → accumulation buffer, orchestrated from a C++ host program.',
-    tech: ['CUDA', 'C++', 'C', 'GPU Programming'],
+      'C++ host setup → CUDA random-state and render kernels → device-side scene intersections and material scattering → PPM framebuffer output.',
+    tech: ['CUDA', 'C++', 'cuRAND', 'PPM'],
     category: 'Graphics',
-    metrics: 'Massively parallel path tracing on GPU threads',
+    metrics: 'Single-file CUDA render pipeline with reusable geometry headers',
   },
   {
     repo: 'Vulkan-Programming',
@@ -104,20 +104,20 @@ export const featuredProjects: FeaturedProject[] = [
   {
     repo: 'Rust-Programming',
     slug: 'rust-systems-lab',
-    title: 'Rust Systems Lab',
-    tagline: 'Memory-safe systems programming experiments',
+    title: 'Rust Game Programming Lab',
+    tagline: 'A collection of Rust game and engine experiments',
     description:
-      'Over a million lines of Rust exploration: ownership, lifetimes, concurrency primitives, and LLVM-level behavior — systems programming with compile-time safety guarantees.',
+      'A repository of Rust experiments built around several game frameworks, including an Amethyst Pong implementation with systems for movement, collisions, scoring, and input.',
     challenges: [
-      'Modeling ownership and borrow semantics in complex data structures',
-      'Fearless concurrency with threads, channels, and atomics',
-      'Inspecting LLVM IR output to understand zero-cost abstractions',
+      'Organising game behaviour into ECS-style systems',
+      'Connecting input bindings, rendering, movement, and scoring',
+      'Comparing project structures across Rust game frameworks',
     ],
     architecture:
-      'Workspace of focused crates, each isolating one systems concept — from raw pointers and unsafe blocks to async runtimes.',
-    tech: ['Rust', 'LLVM', 'Concurrency', 'Cargo'],
+      'Multiple self-contained Cargo projects, including an Amethyst application split into state setup, resources, entities, and focused gameplay systems.',
+    tech: ['Rust', 'Cargo', 'Amethyst', 'ECS'],
     category: 'Systems',
-    metrics: '1M+ bytes of Rust source explored',
+    metrics: 'Multiple Cargo-based game experiments',
   },
   {
     repo: 'hospitaldatabase',

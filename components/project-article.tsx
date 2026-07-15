@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, ArrowRight, ArrowUpRight, Clock, GitBranch, Layers, Lightbulb, Telescope, Copy, Check } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Clock, Copy, GitBranch, Layers, Lightbulb, List, ShieldCheck, Telescope } from 'lucide-react'
 import { Github } from '@/components/brand-icons'
 import { Reveal } from '@/components/motion-primitives'
 import { Highlight, themes } from 'prism-react-renderer'
@@ -130,6 +130,28 @@ function CodeBlock({ language, label, snippet }: { language: string; label: stri
   )
 }
 
+function MobileTableOfContents({ sections }: { sections: { id: string; label: string }[] }) {
+  return (
+    <details className="mt-8 rounded-xl border border-border bg-card p-4 lg:hidden">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-mono text-xs uppercase tracking-wider text-foreground">
+        <span className="flex items-center gap-2"><List className="h-4 w-4 text-primary" aria-hidden="true" />On this page</span>
+        <span className="text-muted-foreground">{sections.length} sections</span>
+      </summary>
+      <nav aria-label="Deep dive contents" className="mt-4 border-t border-border pt-4">
+        <ol className="grid gap-3 sm:grid-cols-2">
+          {sections.map(({ id, label }, index) => (
+            <li key={id}>
+              <a href={`#${id}`} className="flex gap-2 text-sm text-muted-foreground transition-colors hover:text-primary">
+                <span className="font-mono text-xs text-primary">{String(index + 1).padStart(2, '0')}</span>{label}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </details>
+  )
+}
+
 function TableOfContents({ sections }: { sections: { id: string; label: string }[] }) {
   const [activeId, setActiveId] = useState<string>('')
 
@@ -220,13 +242,15 @@ export function ProjectArticleView({
             </Link>
 
             <header className="relative mt-8 flex flex-col gap-5">
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-primary/10 blur-[80px]"
-              />
-              <span className="relative z-10 font-mono text-xs uppercase tracking-[0.25em] text-primary">
-                {project.category} / Deep dive
-              </span>
+              <div aria-hidden="true" className="absolute inset-x-0 -top-8 h-px bg-primary/50" />
+              <div className="relative z-10 flex flex-wrap items-center gap-2 font-mono text-xs uppercase tracking-[0.2em]">
+                <span className="text-primary">{project.category} / Deep dive</span>
+                <span className="text-muted-foreground">/</span>
+                <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+                  <ShieldCheck className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+                  Verified from public source
+                </span>
+              </div>
               <h1 className="relative z-10 text-balance text-4xl font-semibold tracking-tight md:text-5xl">
                 {project.title}
               </h1>
@@ -270,9 +294,16 @@ export function ProjectArticleView({
             </header>
           </Reveal>
 
+          <MobileTableOfContents sections={tocSections} />
+
           {/* Intro */}
           <Reveal className="mt-10" delay={0.1}>
-            <p id="intro" className="text-pretty text-lg leading-relaxed text-foreground/90 scroll-mt-32">{article.intro}</p>
+            <section id="intro" className="scroll-mt-32">
+              <p className="text-pretty text-lg leading-relaxed text-foreground/90">{article.intro}</p>
+              <p className="mt-4 border-l-2 border-primary pl-4 text-sm leading-relaxed text-muted-foreground">
+                Evidence standard: completed-work claims on this page are limited to files, implementation details, and documentation available in the public repository. Planned additions are listed separately under where it goes next.
+              </p>
+            </section>
           </Reveal>
 
           {/* Tech stack */}
