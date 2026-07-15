@@ -180,6 +180,42 @@ export const featuredProjects: FeaturedProject[] = [
     tech: ['Java', 'Minecraft Forge', 'Gradle', 'Blockbench'],
     category: 'Graphics',
   },
+  {
+    repo: 'quantfin',
+    slug: 'quantitative-trading-stack',
+    title: 'Quantitative Trading Stack',
+    tagline: 'Governed research and paper execution without live-order risk',
+    description:
+      'A Python quantitative research and simulated-execution system with validated market data, look-ahead-resistant backtests, statistical models, portfolio allocation, risk limits, model governance, and an explicitly blocked live-trading path.',
+    challenges: [
+      'Preventing look-ahead through decision-dated signals and next-session execution',
+      'Combining transaction costs, trial tracking, and walk-forward validation',
+      'Enforcing capital limits and kill switches before simulated orders reach the broker',
+    ],
+    architecture:
+      'Validated Yahoo data lake → research models and walk-forward backtests → portfolio and risk engines → order state machine and simulated broker → audit, reconciliation, and red-team reports.',
+    tech: ['Python', 'NumPy', 'pandas', 'SciPy', 'pytest', 'mypy'],
+    category: 'AI',
+    metrics: '37 focused tests across data, models, execution, risk, and reporting',
+  },
+  {
+    repo: 'legacymind',
+    slug: 'legacymind-modernization',
+    title: 'LegacyMind',
+    tagline: 'COBOL modernization with signed equivalence evidence',
+    description:
+      'A verification-first COBOL 85 to Java 21 modernization platform with dual parsers, a shared intermediate representation, model-assisted candidate generation, four verification layers, signed certification reports, reproducible benchmarks, and a Next.js evidence dashboard.',
+    challenges: [
+      'Lowering legacy COBOL semantics into a stable, auditable intermediate representation',
+      'Finding migration defects with property, differential, symbolic, and static analysis',
+      'Turning verification evidence into reproducible, cryptographically signed certificates',
+    ],
+    architecture:
+      'COBOL source → stub or ProLeap parser → shared IR → model-assisted Java candidates → compile and four-layer verification → Ed25519 certificate and evidence dashboard.',
+    tech: ['TypeScript', 'Java', 'COBOL', 'Next.js', 'Docker', 'Ed25519'],
+    category: 'AI',
+    metrics: '7/7 benchmark modules certified; 97.1% parser acceptance on 759 files',
+  },
 ]
 
 export interface ExperienceItem {
