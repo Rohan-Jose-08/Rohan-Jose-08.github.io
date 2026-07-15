@@ -1,14 +1,16 @@
+export type MediaItem = {
+  type: 'image' | 'video'
+  src: string
+  alt: string
+  caption?: string
+}
+
 export interface ArticleSection {
   heading: string
   paragraphs: string[]
   code?: { language: string; label: string; snippet: string }
   bullets?: string[]
-  media?: {
-    type: 'image' | 'video'
-    src: string
-    alt: string
-    caption?: string
-  }[]
+  media?: MediaItem | MediaItem[]
 }
 
 const supplementalProjectArticles = {
@@ -152,6 +154,7 @@ init_pm:
             caption: 'The PIT-driven scheduler design that enables preemptive multitasking'
           }
         ]
+      },
       {
         heading: 'Memory management without a safety net',
         paragraphs: [

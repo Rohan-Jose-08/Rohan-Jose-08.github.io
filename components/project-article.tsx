@@ -340,14 +340,14 @@ export function ProjectArticleView({
                       <p className="text-pretty leading-relaxed text-muted-foreground">
                         {p}
                       </p>
-                      {pIdx === 0 && section.media && (
-                        <MediaBlock {...section.media} />
-                      )}
+                      {pIdx === 0 && section.media && (Array.isArray(section.media) ? section.media : [section.media]).map((m, mIdx) => (
+                        <MediaBlock key={mIdx} {...m} />
+                      ))}
                     </div>
                   ))}
-                  {section.paragraphs.length === 0 && section.media && (
-                    <MediaBlock {...section.media} />
-                  )}
+                  {section.paragraphs.length === 0 && section.media && (Array.isArray(section.media) ? section.media : [section.media]).map((m, mIdx) => (
+                    <MediaBlock key={mIdx} {...m} />
+                  ))}
                   {section.code ? <CodeBlock {...section.code} /> : null}
                   {section.bullets ? (
                     <ul className="flex flex-col gap-2 text-sm leading-relaxed text-muted-foreground">
