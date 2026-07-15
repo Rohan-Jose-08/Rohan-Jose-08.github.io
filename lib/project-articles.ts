@@ -8,7 +8,7 @@ export interface ArticleSection {
     src: string
     alt: string
     caption?: string
-  }
+  }[]
 }
 
 const supplementalProjectArticles = {
@@ -16,7 +16,7 @@ const supplementalProjectArticles = {
     slug: 'hospital-management-platform', readingTime: '7 min read',
     intro: 'Hospital Management Platform is a full-stack healthcare workflow project: patients book and manage appointments, doctors work from dedicated views, and administrators oversee the system. The interesting part is the boundary between a pleasant web interface and the disciplined data, access, and notification flows that a healthcare-shaped product demands.',
     sections: [
-      { heading: 'Designing for distinct roles', paragraphs: ['The product has separate patient, doctor, staff, and administrator surfaces rather than one generic dashboard. That division is reflected in focused routes for clinician appointments and profiles, patient records and results, staff sign-in, and administration.', 'Treating roles as first-class from the start makes the workflow legible. A patient should see booking and records; a clinician should see the schedule and relevant patient work; operational users need management tools. The navigation and server endpoints follow those responsibilities.'] },
+      { heading: 'Designing for distinct roles', paragraphs: ['The product has separate patient, doctor, staff, and administrator surfaces rather than one generic dashboard. That division is reflected in focused routes for clinician appointments and profiles, patient records and results, staff sign-in, and administration.', 'Treating roles as first-class from the start makes the workflow legible. A patient should see booking and records; a clinician should see the schedule and relevant patient work; operational users need management tools. The navigation and server endpoints follow those responsibilities.'], media: { type: 'video', src: '/images/hospitaldatabase/2025-07-13 21-59-32.mp4', alt: 'Hospital Management Platform demonstration', caption: 'Role-based interfaces for patients, clinicians, and administrators' } },
       { heading: 'A relational model for real workflows', paragraphs: ['Prisma connects the application to PostgreSQL. The schema models doctors and patients alongside appointments, services, contact data, availability, preferences, statistics, and test results. These are relationships, not a single profile blob, so the application can query the views each workflow actually needs.', 'Migrations show the model evolving with the product: appointment notes, duration and priority, doctor contact data, two-factor fields, staff access, and test results. That history is useful engineering evidence — the data model has been refined as features required it.'] },
       { heading: 'Authentication and communication', paragraphs: ['The application includes password-based sign-in, JSON Web Tokens, bcrypt, authenticator-style two-factor flows, and optional SMS verification. These mechanisms are supported by dedicated API routes rather than being folded into one catch-all handler.', 'Appointments are more useful when the system can follow up, so the project also includes reminder endpoints and email/SMS integrations. PDF test-result download routes complete the loop: the platform stores structured records but can also deliver a document-shaped result to the patient.'] }
     ],
@@ -40,7 +40,7 @@ const supplementalProjectArticles = {
     sections: [
       { heading: 'From sensor values to attitude', paragraphs: ['The firmware initialises a BNO055 IMU over its bus interface, switches it into NDOF operation, and reads Euler heading, roll, and pitch values. Calibration status is queried during startup so the control system has a defined sensor bring-up path.', 'The resulting orientation readings become the process inputs for the three controllers. This is the core feedback loop: measure the current attitude, compare it with the desired attitude, and compute a correction.'] },
       { heading: 'Three coupled control loops', paragraphs: ['Separate PID instances are configured for roll, pitch, and yaw, with independent gains and setpoints. The controller implementation tracks integral accumulation, derivative-on-input, sampling time, and output clamping — the practical pieces that turn the textbook equation into a reusable embedded component.', 'The main loop receives joystick throttle and axis values through an NRF24L01 radio link, converts the orientation data, updates the PIDs, and packages the computed control output. The system repeats on a short delay, creating a simple predictable control cadence.'] },
-      { heading: 'Embedded integration', paragraphs: ['The project brings together the Pico SDK, radio module, IMU driver, UART, and controller code through CMake. Each external component has a focused role, which keeps the control path readable despite the hardware interfaces involved.', 'This is also a reminder that flight control is as much integration work as control theory: pin choices, device initialisation, radio availability, calibration, timing, and output limits all need deliberate handling before tuning can even begin.'] }
+      { heading: 'Embedded integration', paragraphs: ['The project brings together the Pico SDK, radio module, IMU driver, UART, and controller code through CMake. Each external component has a focused role, which keeps the control path readable despite the hardware interfaces involved.', 'This is also a reminder that flight control is as much integration work as control theory: pin choices, device initialisation, radio availability, calibration, timing, and output limits all need deliberate handling before tuning can even begin.'], media: { type: 'image', src: '/images/robotics/vex.jpg', alt: 'Embedded hardware and robotics components', caption: 'Integrating IMU sensors, radio modules, and controllers' } }
     ],
     lessons: ['A PID loop is only as reliable as its sensor and timing assumptions', 'Independent axes make a first controller easier to tune and inspect', 'Hardware bring-up and failure handling are first-class embedded software work'],
     future: ['Connect PID output to a tested PWM motor-mixing stage', 'Log telemetry for gain tuning and post-flight analysis', 'Add safe arming, failsafe, and radio-loss behaviour'],
@@ -49,7 +49,7 @@ const supplementalProjectArticles = {
     slug: 'networked-mastermind', readingTime: '6 min read',
     intro: 'Networked Mastermind takes the familiar code-breaking game and makes the hidden-code relationship literal: one player creates the code, another tries to break it, and the game coordinates both roles over the network.',
     sections: [
-      { heading: 'The board as a state machine', paragraphs: ['The game controller walks the current row, checks that every slot is filled, then unlocks the next row only after a valid attempt. It captures the player colours, compares them with the code, and writes coloured validation pegs before either continuing or ending the game.', 'A correct position is marked directly; a colour that appears elsewhere in the code receives a secondary hint. The controller also enforces the finite attempt count, so transitions to win and loss rooms are consequences of the same board state rather than separate UI shortcuts.'] },
+      { heading: 'The board as a state machine', paragraphs: ['The game controller walks the current row, checks that every slot is filled, then unlocks the next row only after a valid attempt. It captures the player colours, compares them with the code, and writes coloured validation pegs before either continuing or ending the game.', 'A correct position is marked directly; a colour that appears elsewhere in the code receives a secondary hint. The controller also enforces the finite attempt count, so transitions to win and loss rooms are consequences of the same board state rather than separate UI shortcuts.'], media: { type: 'video', src: '/images/mastermind/2025-01-27 22-23-07.mp4', alt: 'Networked Mastermind gameplay demo', caption: 'The board acts as a state machine enforcing valid moves and game rules' } },
       { heading: 'Maker, breaker, and messages', paragraphs: ['The project contains maker and breaker rooms, controller objects for client and server behaviour, and a MultiClient extension. Role messages select the appropriate room; win and loss messages are sent as UDP packets so both participants can converge on the outcome.', 'The networking scope is deliberately narrow. Instead of synchronising every rendering detail, it moves the game facts that matter: role, guess outcome, and terminal state. That is a sensible trade-off for a turn-based student game.'] },
       { heading: 'A complete game presentation', paragraphs: ['The repository includes custom sprites, audio, UI objects, rooms, validation pegs, text input, and save/load controls. Those assets turn the rules engine into a complete playable submission rather than a console proof of concept.', 'GameMaker is well suited to this scale of project: the object/event structure makes interaction direct, while scripts hold reusable networking and helper behaviour.'] }
     ],
@@ -91,12 +91,12 @@ const existingProjectArticles: Record<string, ProjectArticle> = {
           'Every abstraction a modern developer relies on — processes, virtual memory, file descriptors, even the humble printf — is a service provided by a kernel. The goal of this project was to earn those abstractions rather than inherit them: to understand exactly what happens between the moment power is applied and the moment a program runs.',
           'The project deliberately avoids existing kernels, bootloader frameworks, and standard libraries. Every byte that executes was either written by hand or emitted by a toolchain configured from scratch with custom linker scripts.',
         ],
-        media: {
+        media: [{
           type: 'video',
           src: '/images/OSDev/OS-Demo.mp4',
           alt: 'A demo of the custom operating system booting and running basic commands',
           caption: 'Booting the custom OS and interacting with the shell in QEMU'
-        }
+        }]
       },
       {
         heading: 'Stage one: the bootloader',
@@ -104,6 +104,12 @@ const existingProjectArticles: Record<string, ProjectArticle> = {
           'An x86 machine wakes up in 16-bit real mode, pretending it is 1978. The BIOS loads exactly 512 bytes — the boot sector — and jumps to it. Those 512 bytes have to do a remarkable amount of work: load the rest of the kernel from disk, enable the A20 line to unlock memory above 1 MB, install a Global Descriptor Table, and flip the CPU into 32-bit protected mode.',
           'The trickiest part is that the transition is one-way and unforgiving. A single wrong bit in a GDT descriptor triple-faults the CPU and silently reboots the machine — there is no debugger, no stack trace, no error message. Development iterated through QEMU with GDB attached to the emulated CPU, single-stepping through the mode switch instruction by instruction.',
         ],
+        media: {
+          type: 'image',
+          src: '/images/OSDev/kernelpanic.png',
+          alt: 'A kernel panic screen from the custom OS',
+          caption: 'A triple-fault or unhandled exception results in a kernel panic — the only feedback when the bootloader goes wrong'
+        },
         code: {
           language: 'asm',
           label: 'boot/switch_pm.asm — the point of no return',
@@ -132,19 +138,32 @@ init_pm:
           'Hardware interrupts arrive through the 8259 Programmable Interrupt Controller, which powers on with mappings that collide with CPU exceptions. Remapping the PIC so IRQ 0 lands at vector 32 instead of vector 8 is a rite of passage: get it wrong and every timer tick looks like a double fault.',
           'With the IDT and PIC in place, the kernel gained a programmable timer for scheduling ticks and a keyboard driver that translates scancodes into characters — the first moment the OS could actually be interacted with.',
         ],
-        media: {
-          type: 'image',
-          src: '/images/OSDev/kernelshell.png',
-          alt: 'The custom operating system shell',
-          caption: 'Handling keyboard interrupts to power a basic interactive shell'
-        }
-      },
+        media: [
+          {
+            type: 'image',
+            src: '/images/OSDev/kernelshell.png',
+            alt: 'The custom operating system shell',
+            caption: 'Handling keyboard interrupts to power a basic interactive shell'
+          },
+          {
+            type: 'image',
+            src: '/images/OSDev/scheduler-design.png',
+            alt: 'Diagram of the OS scheduler design',
+            caption: 'The PIT-driven scheduler design that enables preemptive multitasking'
+          }
+        ]
       {
         heading: 'Memory management without a safety net',
         paragraphs: [
           'There is no malloc on bare metal until you write one. The kernel implements its own physical memory manager: it parses the memory map handed over at boot, marks reserved regions, and hands out page-aligned frames from a free list.',
           'On top of that sits a simple heap allocator for kernel data structures. Writing an allocator while simultaneously being the only user of that allocator teaches a brutal lesson in bootstrapping: the allocator\u2019s own bookkeeping must be placed in memory that was reserved before the allocator existed.',
         ],
+        media: [{
+          type: 'image',
+          src: '/images/OSDev/snake-game.png',
+          alt: 'Snake game running on the custom OS',
+          caption: 'Memory allocations dynamically power userspace programs like this Snake game'
+        }],
         code: {
           language: 'c',
           label: 'kernel/mem.c — page-aligned kernel allocation',
@@ -166,6 +185,12 @@ init_pm:
           'A freestanding kernel cannot be linked like a normal program. The Makefile drives a cross-compilation pipeline: NASM assembles the boot code, GCC compiles C with -ffreestanding and no standard includes, and a custom linker script places the kernel at exactly the physical address the bootloader loads it to.',
           'The linker script is where many OS projects quietly die. If the entry point is not at the expected offset, or if the sections are ordered so that early boot code references data that has not been loaded yet, the machine simply resets. Making the memory layout explicit and deterministic was as important as any line of C.',
         ],
+        media: [{
+          type: 'image',
+          src: '/images/OSDev/architecture.png',
+          alt: 'Diagram showing the OS build system and architecture',
+          caption: 'High-level view of the custom toolchain, cross-compiler, and kernel linker script'
+        }]
       },
     ],
     lessons: [
@@ -251,6 +276,12 @@ init_pm:
           'Likes, replies, and presence flow over WebSockets, but the system is designed so that real-time is an enhancement, not a dependency. Every real-time update has a pull-based fallback; if the socket drops, the client reconciles state on reconnect by re-fetching anything newer than its last known cursor.',
           'Optimistic UI makes interactions feel instant: a like is rendered immediately, tagged with a client-generated ID, and reconciled when the server acknowledges. Rollback on failure is rare but handled — the UI subtracts the phantom like rather than lying to the user.',
         ],
+        media: {
+          type: 'video',
+          src: '/images/pulse/PulseDemo.mp4',
+          alt: 'Pulse app demo showing real-time interactions',
+          caption: 'Real-time WebSocket integrations paired with optimistic UI updates'
+        }
       },
     ],
     lessons: [

@@ -28,7 +28,9 @@ function MediaBlock({ type, src, alt, caption }: { type: 'image' | 'video'; src:
   return (
     <TiltCard maxTilt={1.5} scaleOnHover={1.005} className="my-6">
       <figure className="group relative overflow-hidden rounded-xl border border-border bg-card/50 transition-colors duration-300 hover:border-primary/30">
-        <BorderBeam duration={8} size={250} className="opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        {type === 'image' && (
+          <BorderBeam duration={8} size={250} className="opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        )}
         <div className="relative aspect-video w-full overflow-hidden bg-muted/20">
           {type === 'video' ? (
             <video
@@ -37,6 +39,7 @@ function MediaBlock({ type, src, alt, caption }: { type: 'image' | 'video'; src:
               loop
               muted
               playsInline
+              controls
               className="h-full w-full object-cover"
             />
           ) : (
