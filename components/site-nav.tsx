@@ -3,13 +3,12 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Command } from 'lucide-react'
-import Magnet from '@/components/Magnet'
 
 const links = [
-  { href: '#projects', label: 'Projects' },
-  { href: '#telemetry', label: 'Telemetry' },
+  { href: '#projects', label: 'Work' },
+  { href: '#telemetry', label: 'Signals' },
   { href: '#experience', label: 'Experience' },
-  { href: '#skills', label: 'Skills' },
+  { href: '#skills', label: 'Stack' },
   { href: '#contact', label: 'Contact' },
 ]
 
@@ -22,8 +21,7 @@ export function SiteNav({ onOpenPalette }: { onOpenPalette: () => void }) {
     const onScroll = () => {
       const y = window.scrollY
       setScrolled(y > 24)
-      const doc = document.documentElement
-      const max = doc.scrollHeight - window.innerHeight
+      const max = document.documentElement.scrollHeight - window.innerHeight
       setProgress(max > 0 ? Math.min(1, Math.max(0, y / max)) : 0)
     }
     onScroll()
@@ -32,102 +30,78 @@ export function SiteNav({ onOpenPalette }: { onOpenPalette: () => void }) {
   }, [])
 
   useEffect(() => {
-    const sectionIds = ['#projects', '#telemetry', '#experience', '#skills', '#contact']
-    const elements = sectionIds
-      .map((id) => document.querySelector(id))
-      .filter((el): el is Element => Boolean(el))
-    if (elements.length === 0) return
+    const elements = links
+      .map(({ href }) => document.querySelector(href))
+      .filter((element): element is Element => Boolean(element))
+    if (!elements.length) return
 
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
-          .filter((e) => e.isIntersecting)
+          .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-        if (visible) {
-          const id = `#${visible.target.id}`
-          setActive(id)
-        }
+        if (visible) setActive(`#${visible.target.id}`)
       },
-      { rootMargin: '-40% 0px -50% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
+      { rootMargin: '-35% 0px -55% 0px', threshold: [0, 0.25, 0.5] }
     )
-
-    elements.forEach((el) => observer.observe(el))
+    elements.forEach((element) => observer.observe(element))
     return () => observer.disconnect()
   }, [])
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled ? 'glass' : 'bg-transparent'
-      }`}
-    >
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5 sm:pt-4">
       <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 transition-opacity duration-500"
-        style={{ opacity: scrolled ? 1 : 0 }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute left-0 top-0 h-px origin-left bg-gradient-to-r from-primary/0 via-primary to-primary/0"
-        style={{ transform: `scaleX(${progress})`, transition: 'transform 80ms linear' }}
-      />
-      <nav
-        aria-label="Main navigation"
-        className="relative mx-auto flex h-16 max-w-6xl items-center justify-between px-6"
+        className={`nav-shell pointer-events-auto relative mx-auto max-w-6xl overflow-hidden rounded-2xl transition-all duration-300 ${
+          scrolled ? 'shadow-2xl' : ''
+        }`}
       >
-        <a
-          href="#top"
-          className="group inline-flex items-center font-mono text-sm font-semibold tracking-tight"
-        >
-          <span className="text-primary transition-transform duration-300 group-hover:-translate-y-px">
-            rj
-          </span>
-          <span className="text-muted-foreground">@</span>
-          <span>portfolio</span>
-          <span className="ml-1 inline-block h-4 w-2 translate-y-px bg-primary animate-pulse" />
-          <span className="text-primary">:~$</span>
-        </a>
-        <div className="hidden items-center gap-8 md:flex">
-          {links.map((l) => {
-            const isActive = active === l.href
-            return (
-              <Magnet
-                key={l.href}
-                magnetStrength={6}
-                padding={8}
-                activeTransition="transform 0.12s ease-out"
-                inactiveTransition="transform 0.25s ease-in-out"
-              >
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 h-px origin-left bg-primary"
+          style={{ transform: `scaleX(${progress})`, transition: 'transform 80ms linear' }}
+        />
+        <nav aria-label="Main navigation" className="flex h-14 items-center justify-between gap-3 px-3 sm:px-4">
+          <a href="#top" className="group flex shrink-0 items-center gap-2 rounded-xl px-2 py-1.5 font-mono text-sm font-semibold">
+            <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-transform group-hover:-rotate-3">RJ</span>
+            <span className="hidden text-foreground sm:inline">Rohan Jose</span>
+          </a>
+
+          <div className="scrollbar-none flex min-w-0 flex-1 items-center justify-start gap-1 overflow-x-auto md:justify-center">
+            {links.map((link) => {
+              const isActive = active === link.href
+              return (
                 <a
-                  href={l.href}
-                  className={`relative inline-flex items-center rounded-md px-3 py-1.5 text-sm transition-colors duration-200 ${isActive ? 'text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                  key={link.href}
+                  href={link.href}
+                  className={`relative shrink-0 rounded-lg px-2.5 py-2 text-xs transition-colors sm:text-sm ${
+                    isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
+                  }`}
                 >
-                  {isActive && (
+                  {isActive ? (
                     <motion.span
                       layoutId="nav-active-indicator"
-                      className="absolute inset-0 rounded-md bg-primary"
-                      transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                      className="absolute inset-0 rounded-lg bg-secondary"
+                      transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                     />
-                  )}
-                  <span className="relative z-10">{l.label}</span>
+                  ) : null}
+                  <span className="relative">{link.label}</span>
                 </a>
-              </Magnet>
-            )
-          })}
-        </div>
-        <button
-          type="button"
-          onClick={onOpenPalette}
-          className="group glass flex cursor-pointer items-center gap-2 rounded-lg px-3 py-1.5 text-xs text-muted-foreground transition-all duration-200 hover:text-foreground hover:border-primary/40"
-          aria-label="Open command palette"
-        >
-          <Command className="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-12" aria-hidden="true" />
-          <span className="hidden sm:inline">Command</span>
-          <kbd className="rounded border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] transition-colors group-hover:border-primary/40 group-hover:text-primary">
-            ⌘K
-          </kbd>
-        </button>
-      </nav>
+              )
+            })}
+          </div>
+
+          <button
+            type="button"
+            onClick={onOpenPalette}
+            className="flex shrink-0 cursor-pointer items-center gap-2 rounded-xl border border-border bg-secondary px-2.5 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            aria-label="Open command palette"
+          >
+            <Command aria-hidden="true" />
+            <span className="hidden lg:inline">Command</span>
+            <kbd className="hidden rounded-md border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] sm:inline">⌘K</kbd>
+          </button>
+        </nav>
+      </div>
     </header>
   )
 }

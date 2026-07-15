@@ -12,7 +12,7 @@ const icons = [Cpu, Layers3, Sparkles, Box, Network, Server]
 
 export function Skills() {
   return (
-    <section id="skills" className="border-y border-border bg-card/40">
+    <section id="skills" className="section-tint border-y border-border">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <SectionHeading
           eyebrow="05 / Capability map"
@@ -32,9 +32,9 @@ export function Skills() {
             return (
               <motion.div key={domain.domain} variants={staggerItem}>
                 <TiltCard
-                  maxTilt={6}
-                  scaleOnHover={1.02}
-                  className="glass group relative flex flex-col gap-4 overflow-hidden rounded-xl p-6 transition-colors duration-300 h-full"
+                  maxTilt={3}
+                  scaleOnHover={1.01}
+                  className="surface-panel group relative flex h-full flex-col gap-5 overflow-hidden rounded-2xl p-6 transition-colors duration-300"
                 >
                   <BorderBeam duration={6} size={200} className="opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <span

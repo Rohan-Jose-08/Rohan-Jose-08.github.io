@@ -27,10 +27,10 @@ function ProjectCard({
     ? new Intl.DateTimeFormat('en-GB', { month: 'short', year: 'numeric' }).format(new Date(repo.pushedAt))
     : null
   return (
-    <TiltCard className="rounded-xl block" maxTilt={4} scaleOnHover={1.008}>
+    <TiltCard className="block rounded-2xl" maxTilt={2} scaleOnHover={1.004}>
       <motion.article
         variants={staggerItem}
-        className="group relative flex flex-col gap-5 overflow-hidden rounded-xl border border-border bg-card p-6 transition-all duration-300 md:p-8"
+        className="surface-panel group relative flex flex-col gap-6 overflow-hidden rounded-2xl p-6 transition-all duration-300 md:p-8 lg:p-10"
       >
         <BorderBeam duration={8} size={300} className="opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-primary/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
