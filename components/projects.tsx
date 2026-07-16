@@ -27,7 +27,7 @@ function ProjectCard({
     ? new Intl.DateTimeFormat('en-GB', { month: 'short', year: 'numeric' }).format(new Date(repo.pushedAt))
     : null
   return (
-    <TiltCard className="block rounded-2xl" maxTilt={2} scaleOnHover={1.004}>
+    <TiltCard className="block rounded-2xl" maxTilt={2.5} scaleOnHover={1.006} glareOpacity={0.075}>
       <motion.article
         variants={staggerItem}
         className="surface-panel group relative flex flex-col gap-6 overflow-hidden rounded-2xl p-6 transition-all duration-300 md:p-8 lg:p-10"
@@ -173,7 +173,7 @@ export function Projects({ repos }: { repos: GitHubRepo[] }) {
               type="button"
               onClick={() => setFilter(c)}
               aria-pressed={filter === c}
-              className="press relative rounded-lg px-3 py-2 font-mono text-xs text-muted-foreground transition-colors duration-200 hover:text-foreground cursor-pointer sm:px-4"
+              className="tactile-control relative cursor-pointer rounded-lg px-3 py-2 font-mono text-xs text-muted-foreground transition-colors duration-200 hover:text-foreground sm:px-4"
             >
               {filter === c && (
                 <motion.span

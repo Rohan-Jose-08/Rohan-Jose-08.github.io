@@ -61,10 +61,15 @@ export function SiteNav({ onOpenPalette }: { onOpenPalette: () => void }) {
           style={{ transform: `scaleX(${progress})`, transition: 'transform 80ms linear' }}
         />
         <nav aria-label="Main navigation" className="flex h-14 items-center justify-between gap-3 px-3 sm:px-4">
-          <a href="#top" className="group flex shrink-0 items-center gap-2 rounded-xl px-2 py-1.5 font-mono text-sm font-semibold">
+          <motion.a
+            href="#top"
+            className="tactile-control group flex shrink-0 items-center gap-2 rounded-xl px-2 py-1.5 font-mono text-sm font-semibold"
+            whileHover={{ y: -1 }}
+            whileTap={{ scale: 0.96, y: 1 }}
+          >
             <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-transform group-hover:-rotate-3">RJ</span>
             <span className="hidden text-foreground sm:inline">Rohan Jose</span>
-          </a>
+          </motion.a>
 
           <div className="scrollbar-none flex min-w-0 flex-1 items-center justify-start gap-1 overflow-x-auto md:justify-center">
             {links.map((link) => {
@@ -73,7 +78,7 @@ export function SiteNav({ onOpenPalette }: { onOpenPalette: () => void }) {
                 <a
                   key={link.href}
                   href={link.href}
-                  className={`relative shrink-0 rounded-lg px-2.5 py-2 text-xs transition-colors sm:text-sm ${
+                  className={`tactile-control relative shrink-0 rounded-lg px-2.5 py-2 text-xs transition-colors sm:text-sm ${
                     isActive ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
@@ -90,16 +95,19 @@ export function SiteNav({ onOpenPalette }: { onOpenPalette: () => void }) {
             })}
           </div>
 
-          <button
+          <motion.button
             type="button"
             onClick={onOpenPalette}
-            className="flex shrink-0 cursor-pointer items-center gap-2 rounded-xl border border-border bg-secondary px-2.5 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+            className="tactile-control flex shrink-0 cursor-pointer items-center gap-2 rounded-xl border border-border bg-secondary px-2.5 py-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
             aria-label="Open command palette"
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.95, y: 1 }}
+            transition={{ type: 'spring', stiffness: 430, damping: 26 }}
           >
             <Command aria-hidden="true" />
             <span className="hidden lg:inline">Command</span>
             <kbd className="hidden rounded-md border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] sm:inline">⌘K</kbd>
-          </button>
+          </motion.button>
         </nav>
       </div>
     </header>

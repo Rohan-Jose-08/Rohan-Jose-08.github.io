@@ -8,6 +8,7 @@ import BlurText from '@/components/BlurText'
 import { CountUp } from '@/components/count-up'
 import { TextScramble } from '@/components/text-scramble'
 import { InteractiveTerminal } from '@/components/interactive-terminal'
+import { TactileSurface } from '@/components/tactile-surface'
 import type { GitHubData } from '@/lib/github'
 
 const easeOut = [0.16, 1, 0.3, 1] as const
@@ -85,15 +86,31 @@ export function Hero({ data }: { data: GitHubData }) {
             </motion.div>
 
             <motion.div {...fade(0.3)} className="flex flex-wrap items-center gap-3">
-              <a href="#projects" className="press inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground transition-transform hover:-translate-y-0.5">
+              <motion.a
+                href="#projects"
+                className="tactile-control group inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground"
+                whileHover={reduced ? undefined : { y: -3, scale: 1.012 }}
+                whileTap={reduced ? undefined : { y: 1, scale: 0.97 }}
+                transition={{ type: 'spring', stiffness: 430, damping: 26 }}
+              >
                 Explore selected work
-                <ArrowDown aria-hidden="true" />
-              </a>
-              <a href={data.profile.htmlUrl} target="_blank" rel="noopener noreferrer" className="press inline-flex items-center gap-2 rounded-xl border border-border bg-secondary px-5 py-3 text-sm font-medium text-foreground transition-colors hover:border-primary/40">
+                <motion.span className="inline-flex" aria-hidden="true" variants={{ hover: { y: 2 } }}>
+                  <ArrowDown />
+                </motion.span>
+              </motion.a>
+              <motion.a
+                href={data.profile.htmlUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="tactile-control group inline-flex items-center gap-2 rounded-xl border border-border bg-secondary px-5 py-3 text-sm font-medium text-foreground"
+                whileHover={reduced ? undefined : { y: -3, scale: 1.012 }}
+                whileTap={reduced ? undefined : { y: 1, scale: 0.97 }}
+                transition={{ type: 'spring', stiffness: 430, damping: 26 }}
+              >
                 <Github aria-hidden="true" />
                 GitHub
-                <ArrowUpRight aria-hidden="true" />
-              </a>
+                <ArrowUpRight className="transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+              </motion.a>
             </motion.div>
           </div>
 
@@ -102,7 +119,9 @@ export function Hero({ data }: { data: GitHubData }) {
               <span>Live engineering profile</span>
               <span className="text-primary"><TextScramble text="systems online" /></span>
             </div>
-            <InteractiveTerminal />
+            <TactileSurface className="rounded-2xl">
+              <InteractiveTerminal />
+            </TactileSurface>
           </motion.div>
         </div>
 

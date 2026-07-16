@@ -85,9 +85,15 @@ export function Experience() {
                     <div className="h-1.5 w-1.5 rounded-full bg-primary" />
                   </motion.div>
 
-                  <div
-                    className="surface-panel group/card relative flex w-full cursor-pointer flex-col gap-4 overflow-hidden rounded-2xl p-6 transition-colors duration-300 md:w-1/2 md:p-8"
+                  <motion.button
+                    type="button"
+                    aria-expanded={isExpanded}
+                    className="surface-panel group/card relative flex w-full cursor-pointer flex-col gap-4 overflow-hidden rounded-2xl p-6 text-left transition-colors duration-300 md:w-1/2 md:p-8"
                     onClick={() => setExpanded(isExpanded ? null : i)}
+                    animate={{ y: isExpanded ? -3 : 0 }}
+                    whileHover={{ y: -3 }}
+                    whileTap={{ scale: 0.992, y: 0 }}
+                    transition={{ type: 'spring', stiffness: 360, damping: 28 }}
                   >
                     <BorderBeam duration={8} size={250} className="opacity-0 transition-opacity duration-300 group-hover/card:opacity-100" />
                     <div className="flex flex-col gap-1 md:hidden">
@@ -119,7 +125,7 @@ export function Experience() {
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: 'auto', opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                          transition={{ height: { type: 'spring', stiffness: 240, damping: 28 }, opacity: { duration: 0.2 } }}
                           className="overflow-hidden"
                         >
                           <ul className="flex flex-col gap-2 text-sm text-muted-foreground">
@@ -162,7 +168,7 @@ export function Experience() {
                         <ChevronDown className="h-4 w-4 text-muted-foreground/40" />
                       </motion.div>
                     </div>
-                  </div>
+                  </motion.button>
                 </motion.article>
               )
             })}
