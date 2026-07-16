@@ -1,7 +1,13 @@
 'use client'
 
-import { useRef, useState, type ReactNode, type MouseEvent } from 'react'
-import { motion, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion'
+import { useRef, type ReactNode, type PointerEvent } from 'react'
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+} from 'framer-motion'
 
 interface TiltCardProps {
   children: ReactNode
@@ -14,6 +20,8 @@ interface TiltCardProps {
   as?: 'div' | 'article' | 'li'
 }
 
+const returnSpring = { stiffness: 260, damping: 24, mass: 0.7 }
+
 export function TiltCard({
   children,
   className = '',
@@ -21,47 +29,33 @@ export function TiltCard({
   perspective = 1000,
   scaleOnHover = 1.02,
   glare = true,
-  glareOpacity = 0.12,
+  glareOpacity = 0.1,
   as: Tag = 'div',
 }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const [isHovered, setIsHovered] = useState(false)
-
-  const rotateX = useMotionValue(0)
-  const rotateY = useMotionValue(0)
+  const reduced = useReducedMotion()
+  const rotateX = useSpring(useMotionValue(0), returnSpring)
+  const rotateY = useSpring(useMotionValue(0), returnSpring)
   const glareX = useMotionValue(50)
   const glareY = useMotionValue(50)
+  const glareLevel = useMotionValue(0)
+  const glareBackground = useMotionTemplate`radial-gradient(360px circle at ${glareX}% ${glareY}%, rgba(255,255,255,${glareOpacity}), transparent 62%)`
 
-  const springConfig = { stiffness: 260, damping: 20, mass: 0.8 }
-  const springRotateX = useSpring(rotateX, springConfig)
-  const springRotateY = useSpring(rotateY, springConfig)
-  
-  const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,${glareOpacity}), transparent 60%)`
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!ref.current) return
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (reduced || event.pointerType === 'touch' || !ref.current) return
     const rect = ref.current.getBoundingClientRect()
-    const centerX = rect.left + rect.width / 2
-    const centerY = rect.top + rect.height / 2
-    const percentX = (e.clientX - centerX) / (rect.width / 2)
-    const percentY = (e.clientY - centerY) / (rect.height / 2)
-
-    rotateX.set(-percentY * maxTilt)
-    rotateY.set(percentX * maxTilt)
-
-    // Glare position follows cursor
-    glareX.set(((e.clientX - rect.left) / rect.width) * 100)
-    glareY.set(((e.clientY - rect.top) / rect.height) * 100)
+    const px = (event.clientX - rect.left) / rect.width
+    const py = (event.clientY - rect.top) / rect.height
+    rotateX.set((0.5 - py) * maxTilt * 2)
+    rotateY.set((px - 0.5) * maxTilt * 2)
+    glareX.set(px * 100)
+    glareY.set(py * 100)
   }
 
-  const handleMouseEnter = () => setIsHovered(true)
-
-  const handleMouseLeave = () => {
-    setIsHovered(false)
+  const reset = () => {
     rotateX.set(0)
     rotateY.set(0)
-    glareX.set(50)
-    glareY.set(50)
+    glareLevel.set(0)
   }
 
   const MotionTag = Tag === 'article' ? motion.article : Tag === 'li' ? motion.li : motion.div
@@ -70,34 +64,25 @@ export function TiltCard({
     <MotionTag
       ref={ref}
       className={`relative ${className}`}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        perspective,
-        transformStyle: 'preserve-3d',
-        rotateX: springRotateX,
-        rotateY: springRotateY,
+      onPointerMove={handlePointerMove}
+      onPointerEnter={(event) => {
+        if (!reduced && event.pointerType !== 'touch') glareLevel.set(1)
       }}
-      animate={{
-        scale: isHovered ? scaleOnHover : 1,
-      }}
-      transition={{ scale: { type: 'spring', stiffness: 300, damping: 20 } }}
+      onPointerLeave={reset}
+      onPointerCancel={reset}
+      style={{ perspective, transformStyle: 'preserve-3d', rotateX, rotateY }}
+      whileHover={reduced ? undefined : { scale: scaleOnHover, y: -2 }}
+      whileTap={reduced ? undefined : { scale: 0.992, y: 0 }}
+      transition={{ type: 'spring', stiffness: 340, damping: 26, mass: 0.7 }}
     >
       {children}
-      {glare && (
+      {glare ? (
         <motion.div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 rounded-[inherit] z-10"
-          style={{
-            background: glareBackground,
-          }}
-          animate={{
-            opacity: isHovered ? 1 : 0,
-          }}
-          transition={{ opacity: { duration: 0.2 } }}
+          className="pointer-events-none absolute inset-0 z-20 rounded-[inherit]"
+          style={{ background: glareBackground, opacity: glareLevel }}
         />
-      )}
+      ) : null}
     </MotionTag>
   )
 }
