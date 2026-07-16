@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Clock, Copy, GitBranch, Layers, Lightbulb, List, ShieldCheck, Telescope } from 'lucide-react'
+import Image from 'next/image'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, ChevronLeft, ChevronRight, Clock, Copy, Expand, GitBranch, Layers, Lightbulb, List, ShieldCheck, Telescope, X } from 'lucide-react'
 import { Github } from '@/components/brand-icons'
 import { Reveal } from '@/components/motion-primitives'
 import { Highlight, themes } from 'prism-react-renderer'
@@ -12,7 +13,7 @@ import { TiltCard } from '@/components/tilt-card'
 import Magnet from '@/components/Magnet'
 import { BorderBeam } from '@/components/border-beam'
 import type { FeaturedProject } from '@/lib/portfolio-data'
-import type { ProjectArticle } from '@/lib/project-articles'
+import type { MediaItem, ProjectArticle } from '@/lib/project-articles'
 import { GITHUB_USERNAME } from '@/lib/github'
 
 const LANGUAGE_MAP: Record<string, string> = {
